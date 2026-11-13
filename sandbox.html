@@ -9,7 +9,7 @@ const originalFetch=window.fetch;window.fetch=async function(url,init){if(String
 const post=(url,body)=>fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const read=(form,key)=>$(form+' [formcontrolname="'+key+'"]').value;
 document.addEventListener('input',e=>{if(e.target.closest('#reg-form,#pin-form,#bank-form'))window.__inputEvents.push({key:e.target.getAttribute('formcontrolname'),data:e.data,value:e.target.value});});
 $('#reg-form').addEventListener('input',()=>{$('.submit-btn').disabled=![...$('#reg-form').querySelectorAll('input')].every(el=>el.value);});
-$('#reg-form').onsubmit=async e=>{e.preventDefault();await post('/api/1.0/member/register',{account:read('#reg-form','account'),password:read('#reg-form','password'),mobile:read('#reg-form','mobile'),name:read('#reg-form','name')});$('#register-area').hidden=true;$('#member-area').hidden=false;};
+$('#reg-form').onsubmit=async e=>{e.preventDefault();await post('/api/1.0/member/register',{account:read('#reg-form','account'),password:read('#reg-form','password'),mobile:read('#reg-form','mobile'),name:read('#reg-form','name')});if(new URL(location.href).searchParams.has('reload')){location.assign('sandbox.html?reload=1&registered=1');return;}$('#register-area').hidden=true;$('#member-area').hidden=false;};
 $('#account-menu').onclick=()=>$('#withdraw-menu').hidden=false;
 $('.withdraw').onclick=e=>{e.preventDefault();$('#withdraw-area').hidden=false;};
 $('#setup-link').onclick=()=>{$('#setup-link').hidden=true;$('#pin-form').hidden=false;};
@@ -17,5 +17,6 @@ $('#pin-form').onsubmit=async e=>{e.preventDefault();await post('/api/1.0/member
 $('mat-select').onclick=()=>{$('#bank-options').hidden=false;$('mat-select').setAttribute('aria-expanded','true');};
 document.querySelectorAll('mat-option').forEach(el=>el.onclick=()=>{selected=Number(el.dataset.id);$('#selected-bank').textContent=el.textContent.trim();$('#bank-options').hidden=true;$('mat-select').setAttribute('aria-expanded','false');});
 $('#bank-form').onsubmit=async e=>{e.preventDefault();await post('/api/1.0/bank/add',{account:read('#bank-form','account'),city:read('#bank-form','city'),province:null,groupBankId:selected});$('#bank-form').hidden=true;$('#saved').hidden=false;};
-$('#reset-test').onclick=()=>location.reload();$('#open-tool').onclick=()=>import('./v.js').then(m=>m.o());
+if(new URL(location.href).searchParams.has('registered')){$('#register-area').hidden=true;$('#member-area').hidden=false;}
+$('#reset-test').onclick=()=>location.href='sandbox.html';$('#open-tool').onclick=()=>import('./r.js').then(m=>m.o());
 </script></body></html>

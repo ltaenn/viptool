@@ -1,11 +1,11 @@
-# viptool
+# viptool 1.1
 
 Bookmarklet cho trình duyệt điện thoại và máy tính. Hồ sơ mặc định: **HI88**. Tool thao tác trên trang đang mở; tên miền của website không bị gắn cứng trong mã.
 
 **Trang cài đặt:** https://ltaenn.github.io/viptool/
 
 ```javascript
-javascript:import('https://ltaenn.github.io/viptool/v.js').then(m=>m.o())
+javascript:import('https://ltaenn.github.io/viptool/r.js').then(m=>m.o())
 ```
 
 Mã bookmarklet dài **73 ký tự**. Mã giao diện và bộ điều khiển được nạp từ GitHub Pages bằng ES module. Mở lại bookmarklet sẽ mở bảng đang có; đóng rồi mở lại vẫn hoạt động dù module đã được trình duyệt cache.
@@ -41,6 +41,10 @@ Bốn cột username, mật khẩu, thành phố, PIN có thể trống và tự
 
 Các giá trị tự sinh chưa được xác nhận phù hợp mọi quy tắc của website; nếu website yêu cầu độ dài hoặc định dạng khác, điền giá trị phù hợp vào data. PIN tự sinh có 6 chữ số.
 
+## Hai ô mật khẩu rút
+
+Tool xác định đủ hai ô nhập riêng biệt trong cùng form trước khi gõ. Nhận diện tên trường/nhãn xác nhận, đồng thời hỗ trợ form có đúng hai ô mật khẩu mà không có tên trường chuẩn. Hai ô phải khác nhau, được điền cùng PIN từng ký tự và được kiểm tra bằng nhau ngay trước khi bấm Gửi đi. Nếu trỏ cùng phần tử hoặc giá trị không trùng, tool dừng và chưa gửi. Có thể gán lại riêng từng ô trong Cấu hình.
+
 ## Thứ tự thao tác
 
 1. Điền form đăng ký, từng ký tự; điền xác nhận mật khẩu nếu có.
@@ -57,6 +61,15 @@ Các giá trị tự sinh chưa được xác nhận phù hợp mọi quy tắc 
 **Sau mỗi bước đều nghỉ 5 giây**, kể cả bước cuối. Tốc độ gõ mặc định 70 ms/ký tự, có thể chỉnh 30–150 ms. Tạm dừng sẽ dừng gõ và dừng tính khoảng nghỉ. Dừng sẽ hủy các thao tác đang chờ, nhưng không hoàn tác hành động website đã nhận trước đó.
 
 Nếu website đã có PIN và mở thẳng form ngân hàng, tool giữ PIN hiện tại, không đặt lại PIN. Data nhiều dòng được xử lý theo thứ tự; giữa hai dòng tool dừng để bạn đăng xuất/chuyển đúng tài khoản hoặc mở form cho dòng kế tiếp rồi nhấn Tiếp tục. Tool không tự tạo phiên tài khoản riêng cho từng dòng.
+
+## Tiếp tục sau khi trang tải lại
+
+1. Mở lại dấu trang viptool sau khi đăng ký làm website tải lại.
+2. Tool hiển thị tiến trình và data đã giữ trong tab.
+3. Nếu chưa nhận được xác nhận của server trước khi tải lại, kiểm tra tài khoản trên website đã đăng nhập đúng rồi nhấn Đã kiểm tra web, tiếp tục.
+4. Tool bắt đầu từ Tài khoản, giữ nguyên username/mật khẩu/thành phố/PIN đã tự sinh và không bấm đăng ký lần nữa.
+
+Bản lưu chỉ dùng cho cùng tab và cùng origin, không được đồng bộ lên GitHub hay sang thiết bị khác. Có thể tắt Khôi phục sau tải trang trong Cấu hình. Trang mẫu `sandbox.html?reload=1` hỗ trợ kiểm tra việc tải lại sau đăng ký.
 
 ## Tìm phần tử và cấu hình theo site
 
@@ -102,7 +115,7 @@ Xem toàn bộ tại tab Mã bank. `VCBNEO` có `IsBindEnabled=false` trong JSON
 
 Tool quan sát `fetch` và `XMLHttpRequest` trên đúng trang. Phản hồi HTTP lỗi, mã `Code` thất bại hoặc mảng `Error` có nội dung sẽ dừng quy trình. Không nhận được xác nhận lưu ngân hàng cũng sẽ dừng; tool không tự báo đã liên kết thành công.
 
-Data tài khoản chỉ giữ trong bộ nhớ của trang và mất khi đóng tool/tải lại. Chỉ cấu hình site được lưu `localStorage`. Không có analytics, máy chủ nhận data riêng hoặc lưu data lên GitHub. Khi đóng tool, các hàm quan sát request được khôi phục nếu chúng vẫn là bản tool đã gắn.
+Khi chạy thật và bật Khôi phục sau tải trang, tiến trình cùng data (gồm các giá trị mật khẩu/PIN đã nhập hoặc tự sinh) được lưu tạm trong `sessionStorage` của chính tab trên cùng origin. Bản lưu có hiệu lực khôi phục 30 phút và bị xóa khi hoàn tất, dừng, đóng tool, bỏ tiến trình hoặc khi phát hiện hết hạn. Cấu hình site được lưu riêng trong `localStorage`. Không có analytics, máy chủ nhận data riêng hoặc lưu data tài khoản lên GitHub. Khi đóng tool, các hàm quan sát request được khôi phục nếu chúng vẫn là bản tool đã gắn.
 
 ## Kiểm tra và giới hạn
 
@@ -112,11 +125,12 @@ Có trang mẫu `sandbox.html` để kiểm tra luồng gõ, bấm và xác nh�
 
 Bookmarklet cần trình duyệt hỗ trợ JavaScript URL và ES module. CSP của website có thể chặn việc nạp mã. Tool không chạy trong giao diện native của app hoặc iframe khác origin. Các sự kiện từ bookmarklet là sự kiện JavaScript, không phải sự kiện bàn phím được trình duyệt đánh dấu `isTrusted`.
 
-CAPTCHA, OTP, điều khoản và các yêu cầu bổ sung của trang cần người dùng xử lý. Nút bị khóa được chờ để trang tự bật; tool không gỡ `disabled`. Nếu website tải lại toàn bộ tài liệu, gọi lại dấu trang và nhập lại data; phiên thực thi không tự tiếp tục xuyên lần tải trang.
+CAPTCHA, OTP, điều khoản và các yêu cầu bổ sung của trang cần người dùng xử lý. Nút bị khóa được chờ để trang tự bật; tool không gỡ `disabled`. Nếu website tải lại toàn bộ tài liệu, giao diện bookmarklet sẽ mất. Gọi lại dấu trang viptool trong cùng tab/cùng tên miền, rồi chọn Tiếp tục. Data và giá trị tự sinh được khôi phục. Nếu trang tải lại trong lúc gửi Đăng ký/Gửi đi/Lưu, cần kiểm tra thao tác đã thành công trên website trước khi xác nhận tiếp tục; tool không tự gửi lại thao tác đó. Bookmarklet không có quyền tự chèn lại mã sau khi tải tài liệu mới; muốn tự mở hoàn toàn cần cơ chế chạy theo trang như userscript/extension.
 
 ## Các file
 
-- `v.js`: ES module cho bookmarklet ngắn.
+- `r.js`: ES module 1.1 cho bookmarklet ngắn; URL mới để tránh cache bản cũ.
+- `v.js`: tên module cũ, được giữ tương thích.
 - `viptool.js`: cùng bộ mã ở dạng script tự chạy.
 - `index.html`: trang cài đặt.
 - `sandbox.html`: trang kiểm tra mẫu.
@@ -124,4 +138,4 @@ CAPTCHA, OTP, điều khoản và các yêu cầu bổ sung của trang cần ng
 - `bookmarklet-offline.txt`: bản chứa toàn bộ mã.
 - `bank-list.json`: danh sách ngân hàng.
 
-Để đổi nơi lưu mã, đưa các file lên hosting HTTPS, rồi tạo bookmarklet theo URL mới của `v.js`. Trang cài đặt tự lấy URL module theo địa chỉ HTTPS hiện tại. Hosting cần trả JavaScript với MIME phù hợp và cho phép CORS để module được nạp từ website khác. GitHub Pages đã được chọn cho bản này.
+Để đổi nơi lưu mã, đưa các file lên hosting HTTPS, rồi tạo bookmarklet theo URL mới của `r.js`. Trang cài đặt tự lấy URL module theo địa chỉ HTTPS hiện tại. Hosting cần trả JavaScript với MIME phù hợp và cho phép CORS để module được nạp từ website khác. GitHub Pages đã được chọn cho bản này.
