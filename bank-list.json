@@ -1,0 +1,392 @@
+[
+  {
+    "Id": 41,
+    "Display": "ABBANK",
+    "Name": "ABBANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 15,
+    "Display": "ACB BANK",
+    "Name": "ACB BANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 1,
+    "Display": "AGRIBANK",
+    "Name": "AGRIBANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 47,
+    "Display": "ANZ BANK",
+    "Name": "ANZ BANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 2,
+    "Display": "BAC A BANK",
+    "Name": "BAC A BANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 3,
+    "Display": "BAO VIET BANK",
+    "Name": "BAO VIET BANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 4,
+    "Display": "BIDV BANK",
+    "Name": "BIDV BANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 45,
+    "Display": "CAKE",
+    "Name": "CAKE",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 42,
+    "Display": "CB BANK",
+    "Name": "CB BANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 17,
+    "Display": "CIMB BANK",
+    "Name": "CIMB BANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 64,
+    "Display": "CITI",
+    "Name": "CITI",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 48,
+    "Display": "COOPBANK",
+    "Name": "CO OPBANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 58,
+    "Display": "DBS",
+    "Name": "DBS",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 5,
+    "Display": "EXIMBANK",
+    "Name": "EXIMBANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 6,
+    "Display": "GP BANK",
+    "Name": "GP BANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 7,
+    "Display": "HD BANK",
+    "Name": "HD BANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 62,
+    "Display": "HNB",
+    "Name": "HNB",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 8,
+    "Display": "HONGLEONG BANK",
+    "Name": "HONGLEONG BANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 49,
+    "Display": "HSBC",
+    "Name": "HSBC",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 59,
+    "Display": "IBK",
+    "Name": "IBK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 9,
+    "Display": "IVB",
+    "Name": "IVB",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 53,
+    "Display": "KBANK",
+    "Name": "KBANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 10,
+    "Display": "KIENLONGBANK",
+    "Name": "KIENLONGBANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 60,
+    "Display": "KOOKMI",
+    "Name": "KOOKMI",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 11,
+    "Display": "LIENVIET BANK",
+    "Name": "LIENVIET BANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 56,
+    "Display": "LIOBANK",
+    "Name": "LIOBANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 63,
+    "Display": "MAFC",
+    "Name": "MAFC",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 13,
+    "Display": "MBBANK",
+    "Name": "MBBANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 66,
+    "Display": "MBV",
+    "Name": "MBV",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 12,
+    "Display": "MSB BANK",
+    "Name": "MSB BANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 14,
+    "Display": "NAMA BANK",
+    "Name": "NAMA BANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 18,
+    "Display": "NCB",
+    "Name": "NCB",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 65,
+    "Display": "NHB",
+    "Name": "NHB",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 25,
+    "Display": "OCB BANK",
+    "Name": "OCB BANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 35,
+    "Display": "PUBLICBANK",
+    "Name": "PBVN",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 24,
+    "Display": "PGBANK",
+    "Name": "PGBANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 46,
+    "Display": "PVCOMBANK",
+    "Name": "PVCOMBANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 26,
+    "Display": "SACOMBANK",
+    "Name": "SACOMBANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 27,
+    "Display": "SAIGONBANK",
+    "Name": "SAIGONBANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 51,
+    "Display": "SCB",
+    "Name": "SCB",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 50,
+    "Display": "SCBVL",
+    "Name": "SCBVL",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 28,
+    "Display": "SEABANK",
+    "Name": "SEABANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 29,
+    "Display": "SHB BANK",
+    "Name": "SHB BANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 30,
+    "Display": "SHINHAN BANK VN",
+    "Name": "SHINHAN BANK VN",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 31,
+    "Display": "TECHCOMBANK",
+    "Name": "TECHCOMBANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 55,
+    "Display": "TIMO BANK",
+    "Name": "TIMO BANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 32,
+    "Display": "TPBANK",
+    "Name": "TPBANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 52,
+    "Display": "UBANK",
+    "Name": "UBANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 33,
+    "Display": "UOB",
+    "Name": "UOB",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 69,
+    "Display": "Vietcombank Neo Limited (VCBNeo)",
+    "Name": "VCBNeo",
+    "IsBindEnabled": false
+  },
+  {
+    "Id": 44,
+    "Display": "VDB",
+    "Name": "VDB",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 34,
+    "Display": "VIB BANK",
+    "Name": "VIB BANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 19,
+    "Display": "VIET CAPITAL BANK (BVBANK)",
+    "Name": "VIET CAPITAL BANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 20,
+    "Display": "VIETA BANK",
+    "Name": "VIETA BANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 36,
+    "Display": "VIETBANK",
+    "Name": "VIETBANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 37,
+    "Display": "VIETCOMBANK",
+    "Name": "VIETCOMBANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 38,
+    "Display": "VIETINBANK",
+    "Name": "VIETINBANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 43,
+    "Display": "VIETNAM BANK FOR SOCIAL POLICIES",
+    "Name": "VIETNAM BANK FOR SOCIAL POLICIES",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 67,
+    "Display": "VIKKI BANK",
+    "Name": "VIKKI BANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 68,
+    "Display": "VIKKI BY HDBANK",
+    "Name": "VIKKI BY HDBANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 39,
+    "Display": "VPBANK",
+    "Name": "VPBANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 16,
+    "Display": "VRB(VIET NGA)",
+    "Name": "VRB(VIET NGA)",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 40,
+    "Display": "WOORI BANK",
+    "Name": "WOORI BANK",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 70,
+    "Display": "BIDC",
+    "Name": "BIDC",
+    "IsBindEnabled": true
+  },
+  {
+    "Id": 71,
+    "Display": "MOMO",
+    "Name": "MOMO",
+    "IsBindEnabled": true
+  }
+]
