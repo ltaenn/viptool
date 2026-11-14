@@ -1,11 +1,11 @@
-# viptool 2.1
+# viptool 2.2
 
 Bookmarklet cho trình duyệt điện thoại và máy tính. Hồ sơ có sẵn: **HI88, NEW88, F8BET, Shbet, MB66, 789BET, QQ88, otpokvip**. Sáu hồ sơ đầu dùng luồng cũ; QQ88 và otpokvip dùng luồng riêng. Cấu hình của các site được lưu độc lập. Tool thao tác trên trang đang mở; tên miền của website không bị gắn cứng trong mã.
 
 **Trang cài đặt:** https://ltaenn.github.io/viptool/
 
 ```javascript
-javascript:import('https://ltaenn.github.io/viptool/c.js').then(m=>m.o())
+javascript:import('https://ltaenn.github.io/viptool/d.js').then(m=>m.o())
 ```
 
 Mã bookmarklet dài **73 ký tự**. Mã giao diện và bộ điều khiển được nạp từ GitHub Pages bằng ES module. Mở lại bookmarklet sẽ mở bảng đang có; đóng rồi mở lại vẫn hoạt động dù module đã được trình duyệt cache.
@@ -48,6 +48,16 @@ Trong bước đăng ký, tool nhận diện một số khung CAPTCHA thông d�
 Khi có CAPTCHA, bảng tool thu nhỏ, hiển thị trạng thái Chờ CAPTCHA và không tính thời gian người dùng giải vào giới hạn chờ thao tác. Bạn tự giải trên website; tool tiếp tục khi thấy khung biến mất hoặc token hoàn tất. Nếu thư viện vẫn giữ khung sau khi giải, bấm **Tôi đã giải xong** trên thông báo của tool để tiếp tục kiểm tra. Có thể bấm Dừng ngay khi đang chờ.
 
 Nếu website tự gửi đăng ký sau khi bạn giải, tool đợi kết quả; không gửi lại khi đã nhận thành công. Nếu website từ chối rõ vì CAPTCHA sai và chưa gửi lại, tool chỉ thử lại sau khi người dùng hoàn tất CAPTCHA. CAPTCHA có cấu trúc riêng chưa nhận diện được có thể cần bổ sung mẫu. Không thử giải CAPTCHA tự động.
+
+## Cấu hình otpokvip dùng chung và lượt xác nhận PIN — bản 2.2
+
+Đã lưu cấu hình người dùng cung cấp vào otpokvip-keypad-config.json và nhúng cùng module phát hành. Có cả accountMenu theo selector footer>div>div>div:nth-of-type(5)>div>div, register/pinSlot đã gán và toàn bộ mục cấu hình còn lại. Không có username, mật khẩu hay giá trị PIN trong file.
+
+Lúc mở bản 2.2, tool áp dụng cấu hình này cho trình duyệt mới và cập nhật hồ sơ otpokvip cũ một lần, rồi lưu vào localStorage trên website hiện tại. Các mục gán phím riêng không nằm trong cấu hình chung được giữ. Các lần chỉnh cấu hình tại máy sau lần cập nhật đó được giữ nguyên, không bị ghi đè khi mở lại cùng phiên bản. Nhập cấu hình JSON đánh dấu đã cập nhật để lần mở sau tiếp tục giữ file vừa nhập. Các chỉnh sửa sau này không tự đẩy ngược lên GitHub; bản chung này là cấu hình đã được người dùng yêu cầu lưu vào phát hành.
+
+Lỗi ở cuối lượt PIN đầu đã được tái hiện bằng module 2.1: đủ sáu phím, sau đó tìm hàng xác nhận gây lỗi Chưa xác định được nhóm PIN. Bản 2.2 giữ nguyên cách bấm phím lượt đầu, ghi nhớ nhóm vừa nhập xong, nhận hàng xác nhận trống hoặc hàng cũ đã được trang xóa để nhập lại. Nếu trang hiện hàng thứ hai chậm, tool chờ thay vì dừng ngay. Trước lượt nhập lại, tool chọn/focus hàng xác nhận ngay cả khi bàn phím vẫn đang mở.
+
+Trong mỗi lượt sáu số, nhóm đang nhập được cố định cho đến khi hết lượt. Hàng xác nhận có một vài ký tự sẽ không bị bỏ qua để chọn một hàng khác còn trống. Tool không gõ lại lượt đầu khi chờ hàng xác nhận. Nếu không đủ bằng chứng nhận diện hàng tiếp theo, tool tiếp tục chờ theo giới hạn thao tác và báo đúng bước đang chờ. Khoảng nghỉ vẫn 2 giây.
 
 ## Nhập PIN trên bàn phím web — bản 2.1
 
@@ -215,6 +225,8 @@ Khi chạy thật và bật Khôi phục sau tải trang, tiến trình cùng da
 
 ## Kiểm tra và giới hạn
 
+Bản 2.2 tái hiện lỗi sau đúng sáu số PIN đầu bằng module 2.1; kiểm tra hàng cũ được xóa để xác nhận, hàng xác nhận riêng không có nhãn, hàng xác nhận hiện chậm, hai hàng trống nhưng có con trỏ ở hàng đang nhận PIN, đúng 18 phím cho ba lượt, cấu hình chung trên máy mới, lưu lại sau tải trang và cập nhật cấu hình cũ một lần. Đã chạy lại kiểm tra chạm/click, gán bàn phím riêng, nhập PIN độc lập và xuất/nhập JSON. Các kiểm tra dùng trang mẫu, chưa xác nhận phiên website thật.
+
 Bản 2.1 đã kiểm tra cấu hình đầu vào được cung cấp, phím chỉ nhận touchend, phím chỉ nhận click, phím nhận cả hai kiểu mà không nhập trùng; ba lượt PIN đủ 18 phím; bàn phím tùy chỉnh và gán riêng số 0–9; nhập PIN độc lập theo dòng data; xuất/nhập JSON giữ kiểu bấm và selector; Dừng hủy click dự phòng đang đợi. Các kiểm tra chạy bằng Chromium với chế độ cảm ứng trên trang mẫu, chưa xác nhận trên phiên website thật.
 
 Bản 2.0 kiểm tra nội dung nút đăng ký có handler riêng, click lan lên button đúng một lần, button ngoài form, các li PIN nằm trong div riêng, hai hàng mới/xác nhận cùng hiện, và bản sao PIN ngoài màn hình. Khoảng nghỉ vẫn 2 giây. Cấu hình → Kiểm tra trang hiển thị trạng thái nút và số nhóm/số ô PIN, không hiển thị giá trị mật khẩu. Đã thử đọc cấu trúc tab LDPlayer thực tế nhưng kênh DevTools không trả lời; kết quả kiểm tra này dựa trên các trang mẫu, chưa xác nhận phiên website thật.
@@ -233,7 +245,8 @@ CAPTCHA được chờ theo mô tả ở trên và cần người dùng tự gi�
 
 ## Các file
 
-- `c.js`: ES module 2.1 cho bookmarklet ngắn; URL mới để tránh cache bản cũ.
+- `d.js`: ES module 2.2 cho bookmarklet ngắn; URL mới để tránh cache bản cũ.
+- `c.js`: tên module 2.1, được giữ tương thích.
 - `b.js`: tên module 2.0, được giữ tương thích.
 - `a.js`: tên module 1.9, được giữ tương thích.
 - `z.js`: tên module 1.8, được giữ tương thích.
@@ -255,4 +268,4 @@ CAPTCHA được chờ theo mô tả ở trên và cần người dùng tự gi�
 - `bank-list.json`: danh sách ngân hàng.
 - `otpokvip-keypad-config.json`: cấu hình đã thêm khung bàn phím, các phím số và kiểu chạm/click.
 
-Để đổi nơi lưu mã, đưa các file lên hosting HTTPS, rồi tạo bookmarklet theo URL mới của `c.js`. Trang cài đặt tự lấy URL module theo địa chỉ HTTPS hiện tại. Hosting cần trả JavaScript với MIME phù hợp và cho phép CORS để module được nạp từ website khác. GitHub Pages đã được chọn cho bản này.
+Để đổi nơi lưu mã, đưa các file lên hosting HTTPS, rồi tạo bookmarklet theo URL mới của `d.js`. Trang cài đặt tự lấy URL module theo địa chỉ HTTPS hiện tại. Hosting cần trả JavaScript với MIME phù hợp và cho phép CORS để module được nạp từ website khác. GitHub Pages đã được chọn cho bản này.

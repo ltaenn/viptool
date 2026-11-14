@@ -27,14 +27,12 @@
     "pinSlot": {
       "selector": "section:nth-of-type(1)>section>section>div>ul>li:nth-of-type(1)"
     },
-    "pinConfirmSlot": "",
     "pinKeyboard": ".ui-number-keyboard",
     "pinKeys": ".ui-number-keyboard-key",
     "bank": "input.ui-select-input__input[placeholder=\"Chọn ngân hàng phát hành\"]",
     "bankAccount": "input[placeholder=\"Vui lòng nhập số tài khoản ngân hàng\"]",
     "accountMenu": {
-      "selector": "div[class*=\"_item_\"]:has(> span[class*=\"_text_\"])",
-      "text": "Tài Khoản"
+      "selector": "footer>div>div>div:nth-of-type(5)>div>div"
     },
     "withdraw": {
       "selector": "div[class*=\"_nav_\"]:has(> span[class*=\"_label_\"])",
@@ -46,16 +44,12 @@
     "back": "div[class*=\"_back_\"]:has(> i.ui-arrow--left)",
     "security": "li:has(i[data-src*=\"style_7_icon_aqzx\"])",
     "phoneMenu": "li:has(i[data-src*=\"input_icon_sj.svg\"])",
-    "pinKey0": "",
-    "pinKey1": "",
-    "pinKey2": "",
-    "pinKey3": "",
-    "pinKey4": "",
-    "pinKey5": "",
-    "pinKey6": "",
-    "pinKey7": "",
-    "pinKey8": "",
-    "pinKey9": ""
+    "confirmPassword": "input[formcontrolname=\"confirmPassword\"],input[name=\"confirmPassword\"]",
+    "pin": "input[formcontrolname=\"newPassword\"],input[name=\"newPassword\"],input[formcontrolname=\"moneyPassword\"],input[formcontrolname=\"withdrawPassword\"]",
+    "pinConfirm": "input[formcontrolname=\"confirm\"],input[name=\"confirm\"],input[id=\"confirm\"],input[formcontrolname=\"confirmPassword\"],input[name=\"confirmPassword\"],input[formcontrolname=\"confirmMoneyPassword\"]",
+    "city": "input[formcontrolname=\"city\"],input[name=\"city\"]",
+    "setupPin": "",
+    "submitPin": ""
   },
   "saveBank": true
 }
