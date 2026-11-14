@@ -1,11 +1,11 @@
-# viptool 1.2
+# viptool 1.3
 
 Bookmarklet cho trình duyệt điện thoại và máy tính. Hồ sơ mặc định: **HI88**. Tool thao tác trên trang đang mở; tên miền của website không bị gắn cứng trong mã.
 
 **Trang cài đặt:** https://ltaenn.github.io/viptool/
 
 ```javascript
-javascript:import('https://ltaenn.github.io/viptool/s.js').then(m=>m.o())
+javascript:import('https://ltaenn.github.io/viptool/t.js').then(m=>m.o())
 ```
 
 Mã bookmarklet dài **73 ký tự**. Mã giao diện và bộ điều khiển được nạp từ GitHub Pages bằng ES module. Mở lại bookmarklet sẽ mở bảng đang có; đóng rồi mở lại vẫn hoạt động dù module đã được trình duyệt cache.
@@ -43,7 +43,7 @@ Các giá trị tự sinh chưa được xác nhận phù hợp mọi quy tắc 
 
 ## Hai ô mật khẩu rút
 
-Tool xác định đủ hai ô nhập riêng biệt trong cùng form trước khi gõ. Nhận diện tên trường/nhãn xác nhận, đồng thời hỗ trợ form có đúng hai ô mật khẩu mà không có tên trường chuẩn. Ưu tiên ô `newPassword` và ô `confirmPassword` trong cùng form. Hai ô phải khác nhau, được điền cùng giá trị `pinwithdraw` từ data từng ký tự và được kiểm tra bằng nhau ngay trước khi bấm Gửi đi. Phản hồi `Code: 200`, `Error: []`, `Result: null` được nhận diện thành công; không yêu cầu Result phải là true. Nếu trỏ cùng phần tử hoặc giá trị không trùng, tool dừng và chưa gửi. Có thể gán lại riêng từng ô trong Cấu hình.
+Tool xác định đủ hai ô nhập riêng biệt trong cùng form trước khi gõ. Nhận diện tên trường/nhãn xác nhận, đồng thời hỗ trợ form có đúng hai ô mật khẩu mà không có tên trường chuẩn. Theo HTML thực tế, ưu tiên `input[formcontrolname="newPassword"]` cho PIN và `input[formcontrolname="confirm"]` cho ô xác nhận trong cùng form. `confirmPassword` là tên trường trong payload của website, khác tên `confirm` trên giao diện. Cấu hình mặc định cũ dùng confirmPassword được tự chuyển sang cấu hình mới; cấu hình tự chọn của người dùng được giữ nguyên. Hai ô phải khác nhau, được điền cùng giá trị `pinwithdraw` từ data từng ký tự và được kiểm tra bằng nhau ngay trước khi bấm Gửi đi. Phản hồi `Code: 200`, `Error: []`, `Result: null` được nhận diện thành công; không yêu cầu Result phải là true. Nếu trỏ cùng phần tử hoặc giá trị không trùng, tool dừng và chưa gửi. Có thể gán lại riêng từng ô trong Cấu hình.
 
 ## Thứ tự thao tác
 
@@ -58,7 +58,7 @@ Tool xác định đủ hai ô nhập riêng biệt trong cùng form trước kh
 9. Chọn theo mã ngân hàng đã chuẩn hóa.
 10. Điền thông tin ngân hàng, từng ký tự. Nếu bật **Lưu ngân hàng sau khi điền**, bấm nút lưu và chờ phản hồi thành công.
 
-**Sau mỗi bước đều nghỉ 5 giây**, kể cả bước cuối. Tốc độ gõ mặc định 70 ms/ký tự, có thể chỉnh 30–150 ms. Tạm dừng sẽ dừng gõ và dừng tính khoảng nghỉ. Dừng sẽ hủy các thao tác đang chờ, nhưng không hoàn tác hành động website đã nhận trước đó.
+**Sau mỗi bước đều nghỉ 2 giây**, kể cả bước cuối. Tốc độ gõ mặc định 70 ms/ký tự, có thể chỉnh 30–150 ms. Tạm dừng sẽ dừng gõ và dừng tính khoảng nghỉ. Dừng sẽ hủy các thao tác đang chờ, nhưng không hoàn tác hành động website đã nhận trước đó.
 
 Nếu website đã có PIN và mở thẳng form ngân hàng, tool giữ PIN hiện tại, không đặt lại PIN. Data nhiều dòng được xử lý theo thứ tự; giữa hai dòng tool dừng để bạn đăng xuất/chuyển đúng tài khoản hoặc mở form cho dòng kế tiếp rồi nhấn Tiếp tục. Tool không tự tạo phiên tài khoản riêng cho từng dòng.
 
@@ -67,7 +67,7 @@ Nếu website đã có PIN và mở thẳng form ngân hàng, tool giữ PIN hi�
 1. Mở lại dấu trang viptool sau khi đăng ký làm website tải lại.
 2. Tool hiển thị tiến trình và data đã giữ trong tab.
 3. Nếu chưa nhận được xác nhận của server trước khi tải lại, kiểm tra tài khoản trên website đã đăng nhập đúng rồi nhấn Đã kiểm tra web, tiếp tục.
-4. Tool chờ **1 giây** sau khi bạn chọn Tiếp tục, rồi bắt đầu từ Tài khoản; giữ nguyên username/mật khẩu/thành phố/PIN đã tự sinh và không bấm đăng ký lần nữa. Khoảng nghỉ giữa các bước khác vẫn là **5 giây**.
+4. Tool chờ **2 giây** sau khi bạn chọn Tiếp tục, rồi bắt đầu từ Tài khoản; giữ nguyên username/mật khẩu/thành phố/PIN đã tự sinh và không bấm đăng ký lần nữa. Khoảng nghỉ giữa các bước khác vẫn là **2 giây**.
 
 Bản lưu chỉ dùng cho cùng tab và cùng origin, không được đồng bộ lên GitHub hay sang thiết bị khác. Có thể tắt Khôi phục sau tải trang trong Cấu hình. Trang mẫu `sandbox.html?reload=1` hỗ trợ kiểm tra việc tải lại sau đăng ký.
 
@@ -129,7 +129,8 @@ CAPTCHA, OTP, điều khoản và các yêu cầu bổ sung của trang cần ng
 
 ## Các file
 
-- `s.js`: ES module 1.2 cho bookmarklet ngắn; URL mới để tránh cache bản cũ.
+- `t.js`: ES module 1.3 cho bookmarklet ngắn; URL mới để tránh cache bản cũ.
+- `s.js`: tên module 1.2, được giữ tương thích.
 - `r.js`: tên module 1.1, được giữ tương thích.
 - `v.js`: tên module cũ, được giữ tương thích.
 - `viptool.js`: cùng bộ mã ở dạng script tự chạy.
@@ -139,4 +140,4 @@ CAPTCHA, OTP, điều khoản và các yêu cầu bổ sung của trang cần ng
 - `bookmarklet-offline.txt`: bản chứa toàn bộ mã.
 - `bank-list.json`: danh sách ngân hàng.
 
-Để đổi nơi lưu mã, đưa các file lên hosting HTTPS, rồi tạo bookmarklet theo URL mới của `s.js`. Trang cài đặt tự lấy URL module theo địa chỉ HTTPS hiện tại. Hosting cần trả JavaScript với MIME phù hợp và cho phép CORS để module được nạp từ website khác. GitHub Pages đã được chọn cho bản này.
+Để đổi nơi lưu mã, đưa các file lên hosting HTTPS, rồi tạo bookmarklet theo URL mới của `t.js`. Trang cài đặt tự lấy URL module theo địa chỉ HTTPS hiện tại. Hosting cần trả JavaScript với MIME phù hợp và cho phép CORS để module được nạp từ website khác. GitHub Pages đã được chọn cho bản này.
