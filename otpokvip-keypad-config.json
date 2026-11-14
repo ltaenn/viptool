@@ -1,0 +1,61 @@
+{
+  "label": "otpokvip",
+  "flow": "otpokvip",
+  "origin": "",
+  "speed": 70,
+  "pinKeyEvent": "auto",
+  "auto": {
+    "username": true,
+    "password": true,
+    "city": true,
+    "pin": true
+  },
+  "routes": [
+    null,
+    null,
+    null
+  ],
+  "mapping": {
+    "username": "input[data-input-name=\"account\"]",
+    "password": "input[data-input-name=\"userpass\"]",
+    "fullName": "input[data-input-name=\"realName\"]",
+    "phone": "input[data-input-name=\"phone\"]",
+    "register": {
+      "selector": "div:nth-of-type(2)>div>section>section:nth-of-type(2)>div>button",
+      "text": "ĐĂNG KÝ"
+    },
+    "pinSlot": {
+      "selector": "section:nth-of-type(1)>section>section>div>ul>li:nth-of-type(1)"
+    },
+    "pinConfirmSlot": "",
+    "pinKeyboard": ".ui-number-keyboard",
+    "pinKeys": ".ui-number-keyboard-key",
+    "bank": "input.ui-select-input__input[placeholder=\"Chọn ngân hàng phát hành\"]",
+    "bankAccount": "input[placeholder=\"Vui lòng nhập số tài khoản ngân hàng\"]",
+    "accountMenu": {
+      "selector": "div[class*=\"_item_\"]:has(> span[class*=\"_text_\"])",
+      "text": "Tài Khoản"
+    },
+    "withdraw": {
+      "selector": "div[class*=\"_nav_\"]:has(> span[class*=\"_label_\"])",
+      "text": "Rút Tiền"
+    },
+    "addBank": "div[class*=\"_addAccountInputBtn_\"]",
+    "addBankType": "#addAccountClick",
+    "saveBank": "#bindWithdrawAccountNextClick",
+    "back": "div[class*=\"_back_\"]:has(> i.ui-arrow--left)",
+    "security": "li:has(i[data-src*=\"style_7_icon_aqzx\"])",
+    "phoneMenu": "li:has(i[data-src*=\"input_icon_sj.svg\"])",
+    "pinKey0": "",
+    "pinKey1": "",
+    "pinKey2": "",
+    "pinKey3": "",
+    "pinKey4": "",
+    "pinKey5": "",
+    "pinKey6": "",
+    "pinKey7": "",
+    "pinKey8": "",
+    "pinKey9": ""
+  },
+  "saveBank": true
+}

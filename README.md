@@ -1,11 +1,11 @@
-# viptool 2.0
+# viptool 2.1
 
 Bookmarklet cho trình duyệt điện thoại và máy tính. Hồ sơ có sẵn: **HI88, NEW88, F8BET, Shbet, MB66, 789BET, QQ88, otpokvip**. Sáu hồ sơ đầu dùng luồng cũ; QQ88 và otpokvip dùng luồng riêng. Cấu hình của các site được lưu độc lập. Tool thao tác trên trang đang mở; tên miền của website không bị gắn cứng trong mã.
 
 **Trang cài đặt:** https://ltaenn.github.io/viptool/
 
 ```javascript
-javascript:import('https://ltaenn.github.io/viptool/b.js').then(m=>m.o())
+javascript:import('https://ltaenn.github.io/viptool/c.js').then(m=>m.o())
 ```
 
 Mã bookmarklet dài **73 ký tự**. Mã giao diện và bộ điều khiển được nạp từ GitHub Pages bằng ES module. Mở lại bookmarklet sẽ mở bảng đang có; đóng rồi mở lại vẫn hoạt động dù module đã được trình duyệt cache.
@@ -49,6 +49,27 @@ Khi có CAPTCHA, bảng tool thu nhỏ, hiển thị trạng thái Chờ CAPTCHA
 
 Nếu website tự gửi đăng ký sau khi bạn giải, tool đợi kết quả; không gửi lại khi đã nhận thành công. Nếu website từ chối rõ vì CAPTCHA sai và chưa gửi lại, tool chỉ thử lại sau khi người dùng hoàn tất CAPTCHA. CAPTCHA có cấu trúc riêng chưa nhận diện được có thể cần bổ sung mẫu. Không thử giải CAPTCHA tự động.
 
+## Nhập PIN trên bàn phím web — bản 2.1
+
+Cấu hình của otpokvip có thêm các mục sau, được lưu và xuất/nhập cùng hồ sơ site:
+
+- mapping.pinSlot: ô đầu để mở bàn phím; giữ nguyên mục bạn đã gán.
+- mapping.pinConfirmSlot: ô đầu hàng xác nhận riêng, nếu trang có hai hàng cùng hiện và cần gán riêng.
+- mapping.pinKeyboard: khung bàn phím số, mặc định .ui-number-keyboard.
+- mapping.pinKeys: selector chung của các phím số, mặc định .ui-number-keyboard-key. Tool chọn số theo chữ trên phím, bao gồm 0; không chọn phím Xóa hoặc Thu gọn.
+- mapping.pinKey0 đến mapping.pinKey9: selector riêng cho từng phím nếu bàn phím có cấu trúc khác. Để trống để dùng pinKeys.
+- pinKeyEvent: auto, touch hoặc click. Mặc định auto.
+
+Luồng tự động vẫn bấm PIN lần lượt ở ba bước đặt PIN, nhập lại PIN và nhập PIN để thêm ngân hàng. PIN luôn lấy từ cột pinwithdraw, cần 6 chữ số hoặc tự sinh nếu để trống và bật tự sinh PIN. Không nhập PIN bằng cách dán vào ô mật khẩu native trên site này.
+
+Chế độ auto gửi một cặp touchstart/touchend rồi quan sát số chấm PIN. Khi trang đã nhận ký tự thì không gửi click. Chỉ khi chưa thấy trang nhận ký tự mới dùng click dự phòng, sau đó tiếp tục chờ phản hồi. Nếu không xác nhận được ký tự hoặc trang nhận nhiều ký tự cho một lần bấm, tool dừng trước phím kế tiếp. Có thể chọn touch hoặc click riêng trong Cấu hình để phù hợp bàn phím website.
+
+Có nút độc lập trong tab Dữ liệu: cuộn tới Bấm PIN trên bàn phím web → chọn dòng data → chọn lượt nhập → bấm Nhập PIN trên bàn phím web. Chức năng này chỉ bấm sáu phím, không đăng ký, không bấm nút xác nhận ngân hàng và không gửi OTP. Dừng sẽ hủy cả click dự phòng đang chờ. Nếu có tiến trình đã lưu, cần tiếp tục hoặc bỏ tiến trình đó trước khi chạy chức năng riêng.
+
+Trong Cấu hình, mục Chọn cạnh bàn phím chọn cả khung bàn phím; mục Chọn cạnh Các phím số chọn mẫu phím dùng chung. Các mục số 0–9 cho phép gán riêng từng phím. Chọn chỉ ghi nhận selector, không kích hoạt phím khi đang gán. Các trường native pin/pinConfirm của site khác không hiện trong danh sách gán otpokvip để tránh nhầm lẫn.
+
+File otpokvip-keypad-config.json chứa cấu hình bạn cung cấp được bổ sung bàn phím mặc định. Giữ register/pinSlot bạn đã gán; selector dạng nth-of-type có thể cần gán lại khi website đổi bố cục. File không có data tài khoản hay giá trị PIN. Copy nội dung file vào Cấu hình → Nhập cấu hình site từ JSON để chuyển giữa máy.
+
 ## Nhận diện ba ô đăng ký otpokvip
 
 Bản 1.8 nhận trực tiếp ba input trong cùng một nhóm đăng ký đang hiển thị:
@@ -57,7 +78,7 @@ Bản 1.8 nhận trực tiếp ba input trong cùng một nhóm đăng ký đang
 - input[data-input-name="userpass"]
 - input[data-input-name="realName"]
 
-Nút đăng ký được tìm theo button#insideRegisterSubmitClick trong đúng nhóm account/userpass/realName vừa điền, mở rộng tới vùng đăng ký nếu nút nằm ở footer bên cạnh hoặc ngoài form. Tool chờ button được bật, rồi chỉ bấm một lần vào div.ui-button__content bên trong; sự kiện lan lên button, hỗ trợ handler gắn ở cả nội dung lẫn button. Không bấm cả hai phần tử nối tiếp nhau để tránh gửi hai lần. Cấu hình nút cũ tìm toàn trang không được dùng cho thao tác đăng ký otpokvip. Tool loại nút opacity 0, aria-hidden, inert hoặc nằm ở nhóm khác; nếu có hai nút cùng hiện thì chỉ chọn khi xác định được duy nhất một nút được bật. Hai nút cùng bật trong cùng form vẫn được báo rõ để tránh bấm nhầm. Các section.ui-input, section.ui-input__input-wrap, section.ui-input__input-container và biểu tượng SVG là thẻ bao ngoài, không phải đích nhập. Việc điền ba ô này không phụ thuộc selector Username/Mật khẩu/Họ tên cũ đã lưu. Tool tự chọn otpokvip khi có đủ bộ ba này trên trang lúc mở. Có thể chọn lại site bằng danh sách hồ sơ.
+Nút đăng ký được tìm theo button#insideRegisterSubmitClick trong đúng nhóm account/userpass/realName vừa điền, mở rộng tới vùng đăng ký nếu nút nằm ở footer bên cạnh hoặc ngoài form. Tool chờ button được bật, rồi chỉ bấm một lần vào div.ui-button__content bên trong; sự kiện lan lên button, hỗ trợ handler gắn ở cả nội dung lẫn button. Không bấm cả hai phần tử nối tiếp nhau để tránh gửi hai lần. Selector đăng ký tự gán được dùng trong đúng nhóm form đăng ký; nếu không khớp thì tìm theo ID nút mặc định trong nhóm đó, không tìm tùy ý trên toàn trang. Tool loại nút opacity 0, aria-hidden, inert hoặc nằm ở nhóm khác; nếu có hai nút cùng hiện thì chỉ chọn khi xác định được duy nhất một nút được bật. Hai nút cùng bật trong cùng form vẫn được báo rõ để tránh bấm nhầm. Các section.ui-input, section.ui-input__input-wrap, section.ui-input__input-container và biểu tượng SVG là thẻ bao ngoài, không phải đích nhập. Việc điền ba ô này không phụ thuộc selector Username/Mật khẩu/Họ tên cũ đã lưu. Tool tự chọn otpokvip khi có đủ bộ ba này trên trang lúc mở. Có thể chọn lại site bằng danh sách hồ sơ.
 
 Tool phân biệt form đăng ký với form đăng nhập đang hiển thị bằng việc tìm bộ ba trong cùng nhóm, bỏ bản sao ẩn qua hidden/aria-hidden/opacity, tìm lại input sau mỗi ký tự để hỗ trợ website dựng lại ô. Nếu thực sự có hai form đăng ký hiện cùng lúc, tool dừng thay vì nhập tùy ý. Cấu hình → Kiểm tra trang cho biết đã tìm đủ ba ô hay chưa; thông tin kiểm tra không chứa giá trị tài khoản/mật khẩu.
 
@@ -194,6 +215,8 @@ Khi chạy thật và bật Khôi phục sau tải trang, tiến trình cùng da
 
 ## Kiểm tra và giới hạn
 
+Bản 2.1 đã kiểm tra cấu hình đầu vào được cung cấp, phím chỉ nhận touchend, phím chỉ nhận click, phím nhận cả hai kiểu mà không nhập trùng; ba lượt PIN đủ 18 phím; bàn phím tùy chỉnh và gán riêng số 0–9; nhập PIN độc lập theo dòng data; xuất/nhập JSON giữ kiểu bấm và selector; Dừng hủy click dự phòng đang đợi. Các kiểm tra chạy bằng Chromium với chế độ cảm ứng trên trang mẫu, chưa xác nhận trên phiên website thật.
+
 Bản 2.0 kiểm tra nội dung nút đăng ký có handler riêng, click lan lên button đúng một lần, button ngoài form, các li PIN nằm trong div riêng, hai hàng mới/xác nhận cùng hiện, và bản sao PIN ngoài màn hình. Khoảng nghỉ vẫn 2 giây. Cấu hình → Kiểm tra trang hiển thị trạng thái nút và số nhóm/số ô PIN, không hiển thị giá trị mật khẩu. Đã thử đọc cấu trúc tab LDPlayer thực tế nhưng kênh DevTools không trả lời; kết quả kiểm tra này dựa trên các trang mẫu, chưa xác nhận phiên website thật.
 
 Bản 1.9 tái hiện lỗi Có nhiều phần tử cho Nút đăng ký của bản 1.8 trên trang mẫu rồi xác nhận đã sửa: nút trùng ID ngoài form, bản sao ẩn trong form, selector lưu cũ quá rộng, nút ở footer cùng form và nút trùng bị disabled. Hai nút thực sự cùng bật trong cùng form vẫn bị chặn; đã chạy đủ luồng otpokvip sau các trường hợp chọn nút hợp lệ.
@@ -210,7 +233,8 @@ CAPTCHA được chờ theo mô tả ở trên và cần người dùng tự gi�
 
 ## Các file
 
-- `b.js`: ES module 2.0 cho bookmarklet ngắn; URL mới để tránh cache bản cũ.
+- `c.js`: ES module 2.1 cho bookmarklet ngắn; URL mới để tránh cache bản cũ.
+- `b.js`: tên module 2.0, được giữ tương thích.
 - `a.js`: tên module 1.9, được giữ tương thích.
 - `z.js`: tên module 1.8, được giữ tương thích.
 - `y.js`: tên module 1.7, được giữ tương thích.
@@ -229,5 +253,6 @@ CAPTCHA được chờ theo mô tả ở trên và cần người dùng tự gi�
 - `bookmarklet.txt`: bookmarklet ngắn.
 - `bookmarklet-offline.txt`: bản chứa toàn bộ mã.
 - `bank-list.json`: danh sách ngân hàng.
+- `otpokvip-keypad-config.json`: cấu hình đã thêm khung bàn phím, các phím số và kiểu chạm/click.
 
-Để đổi nơi lưu mã, đưa các file lên hosting HTTPS, rồi tạo bookmarklet theo URL mới của `b.js`. Trang cài đặt tự lấy URL module theo địa chỉ HTTPS hiện tại. Hosting cần trả JavaScript với MIME phù hợp và cho phép CORS để module được nạp từ website khác. GitHub Pages đã được chọn cho bản này.
+Để đổi nơi lưu mã, đưa các file lên hosting HTTPS, rồi tạo bookmarklet theo URL mới của `c.js`. Trang cài đặt tự lấy URL module theo địa chỉ HTTPS hiện tại. Hosting cần trả JavaScript với MIME phù hợp và cho phép CORS để module được nạp từ website khác. GitHub Pages đã được chọn cho bản này.
