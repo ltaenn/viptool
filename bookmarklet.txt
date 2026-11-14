@@ -1,1 +1,1 @@
-javascript:import('https://ltaenn.github.io/viptool/a.js').then(m=>m.o())
+javascript:import('https://ltaenn.github.io/viptool/b.js').then(m=>m.o())
