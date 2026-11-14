@@ -1,11 +1,11 @@
-# viptool 1.4
+# viptool 1.5
 
 Bookmarklet cho trình duyệt điện thoại và máy tính. Hồ sơ có sẵn: **HI88, NEW88, F8BET, Shbet, MB66, 789BET, QQ88**. Sáu hồ sơ đầu dùng luồng cũ; QQ88 dùng luồng thêm ngân hàng riêng. Cấu hình của các site được lưu độc lập. Tool thao tác trên trang đang mở; tên miền của website không bị gắn cứng trong mã.
 
 **Trang cài đặt:** https://ltaenn.github.io/viptool/
 
 ```javascript
-javascript:import('https://ltaenn.github.io/viptool/u.js').then(m=>m.o())
+javascript:import('https://ltaenn.github.io/viptool/w.js').then(m=>m.o())
 ```
 
 Mã bookmarklet dài **73 ký tự**. Mã giao diện và bộ điều khiển được nạp từ GitHub Pages bằng ES module. Mở lại bookmarklet sẽ mở bảng đang có; đóng rồi mở lại vẫn hoạt động dù module đã được trình duyệt cache.
@@ -60,9 +60,10 @@ Sau các bước Đăng ký → Tài khoản → Rút tiền:
 3. Chọn tên ngân hàng theo mã bank trong data.
 4. Gõ từng ký tự vào `input[name="bankCard"]` từ cột numberbank.
 5. Gõ từng ký tự vào `input[name="customBankBranch"]` từ cột cyti.
-6. Bấm `span.am-button.btn-success` có chữ Xác nhận.
+6. Gõ cùng giá trị pinwithdraw từng ký tự vào `input[type="password"][name="withdraw"]` và `input[type="password"][name="withdrawT"]`.
+7. Kiểm tra hai ô PIN trùng nhau và đúng data, rồi mới bấm `span.am-button.btn-success` có chữ Xác nhận. Nếu thiếu một ô, hai ô trỏ cùng phần tử hoặc PIN không trùng thì tool chưa gửi form.
 
-Luồng QQ88 không thiết lập PIN rút, nên cột pinwithdraw có thể trống. Tác vụ đầy đủ có 10 bước, thêm ngân hàng riêng có 8 bước; vẫn nghỉ 2 giây sau mỗi bước.
+Luồng QQ88 điền PIN ngay trên form thêm ngân hàng; không gọi API đặt PIN của luồng HI88. Cột pinwithdraw bắt buộc có giá trị hoặc được tự sinh nếu để trống và bật tự sinh PIN. Bước điền city bao gồm điền cả hai ô PIN, sau đó nghỉ 2 giây rồi mới tới bước Xác nhận. Tác vụ đầy đủ vẫn có 10 bước, thêm ngân hàng riêng có 8 bước.
 
 Chưa có URL/phản hồi lưu ngân hàng QQ88 trong file đầu vào. Mặc định tool chỉ báo **đã bấm Xác nhận**, không khẳng định đã lưu thành công. Bạn kiểm tra thông báo trên website. Nếu khai báo routes[2] đúng trong JSON cấu hình QQ88, tool sẽ đợi xác nhận từ phản hồi đó. Danh sách lựa chọn QQ88 chưa có outerHTML từng mục, nên tool hỗ trợ các phần tử option, am-list-item và text tương ứng; cần thử trên website thật để xác nhận cấu trúc danh sách.
 
@@ -146,7 +147,7 @@ Khi chạy thật và bật Khôi phục sau tải trang, tiến trình cùng da
 
 Có trang mẫu `sandbox.html` để kiểm tra luồng gõ, bấm và xác nhận bằng các phản hồi giả lập ngay trong trình duyệt. Trang này không tạo tài khoản hoặc liên kết ngân hàng thật.
 
-Bản 1.4 đã kiểm tra bằng Chromium cục bộ: bảy hồ sơ site; QQ88 với MB/VCB/AGRI/TCB; không yêu cầu PIN trong luồng QQ88; CAPTCHA trước và sau bấm đăng ký, chờ hơn hai phút, chỉ thử lại sau khi người dùng hoàn tất khi có phản hồi từ chối CAPTCHA; dừng trong lúc chờ CAPTCHA. Đã chạy lại kiểm tra hồi quy luồng cũ: cả ba chế độ; luồng thật trên DOM mẫu đủ 10 bước; xác nhận ba phản hồi; gõ từng ký tự; giữ số 0 đầu; giữ PIN đã có; tạm dừng/tiếp tục; hủy khi dừng; dừng khi API trả lỗi nghiệp vụ; bookmarklet module mở lại; khung rộng 320, 360, 390, 430 px. Chưa kiểm thử tài khoản thật trên website hoặc trên từng thiết bị điện thoại thực tế.
+Bản 1.5 kiểm tra thêm hai ô withdraw/withdrawT, ký tự gõ, PIN tự sinh, chặn xác nhận khi thiếu ô hoặc hai giá trị khác nhau; đã kiểm tra bằng Chromium cục bộ: bảy hồ sơ site; QQ88 với MB/VCB/AGRI/TCB; PIN trong form QQ88; CAPTCHA trước và sau bấm đăng ký, chờ hơn hai phút, chỉ thử lại sau khi người dùng hoàn tất khi có phản hồi từ chối CAPTCHA; dừng trong lúc chờ CAPTCHA. Đã chạy lại kiểm tra hồi quy luồng cũ: cả ba chế độ; luồng thật trên DOM mẫu đủ 10 bước; xác nhận ba phản hồi; gõ từng ký tự; giữ số 0 đầu; giữ PIN đã có; tạm dừng/tiếp tục; hủy khi dừng; dừng khi API trả lỗi nghiệp vụ; bookmarklet module mở lại; khung rộng 320, 360, 390, 430 px. Chưa kiểm thử tài khoản thật trên website hoặc trên từng thiết bị điện thoại thực tế.
 
 Bookmarklet cần trình duyệt hỗ trợ JavaScript URL và ES module. CSP của website có thể chặn việc nạp mã. Tool không chạy trong giao diện native của app hoặc iframe khác origin. Các sự kiện từ bookmarklet là sự kiện JavaScript, không phải sự kiện bàn phím được trình duyệt đánh dấu `isTrusted`.
 
@@ -154,7 +155,8 @@ CAPTCHA được chờ theo mô tả ở trên và cần người dùng tự gi�
 
 ## Các file
 
-- `u.js`: ES module 1.4 cho bookmarklet ngắn; URL mới để tránh cache bản cũ.
+- `w.js`: ES module 1.5 cho bookmarklet ngắn; URL mới để tránh cache bản cũ.
+- `u.js`: tên module 1.4, được giữ tương thích.
 - `t.js`: tên module 1.3, được giữ tương thích.
 - `s.js`: tên module 1.2, được giữ tương thích.
 - `r.js`: tên module 1.1, được giữ tương thích.
@@ -167,4 +169,4 @@ CAPTCHA được chờ theo mô tả ở trên và cần người dùng tự gi�
 - `bookmarklet-offline.txt`: bản chứa toàn bộ mã.
 - `bank-list.json`: danh sách ngân hàng.
 
-Để đổi nơi lưu mã, đưa các file lên hosting HTTPS, rồi tạo bookmarklet theo URL mới của `u.js`. Trang cài đặt tự lấy URL module theo địa chỉ HTTPS hiện tại. Hosting cần trả JavaScript với MIME phù hợp và cho phép CORS để module được nạp từ website khác. GitHub Pages đã được chọn cho bản này.
+Để đổi nơi lưu mã, đưa các file lên hosting HTTPS, rồi tạo bookmarklet theo URL mới của `w.js`. Trang cài đặt tự lấy URL module theo địa chỉ HTTPS hiện tại. Hosting cần trả JavaScript với MIME phù hợp và cho phép CORS để module được nạp từ website khác. GitHub Pages đã được chọn cho bản này.
