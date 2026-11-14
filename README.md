@@ -1,11 +1,11 @@
-# viptool 1.7
+# viptool 1.8
 
 Bookmarklet cho trình duyệt điện thoại và máy tính. Hồ sơ có sẵn: **HI88, NEW88, F8BET, Shbet, MB66, 789BET, QQ88, otpokvip**. Sáu hồ sơ đầu dùng luồng cũ; QQ88 và otpokvip dùng luồng riêng. Cấu hình của các site được lưu độc lập. Tool thao tác trên trang đang mở; tên miền của website không bị gắn cứng trong mã.
 
 **Trang cài đặt:** https://ltaenn.github.io/viptool/
 
 ```javascript
-javascript:import('https://ltaenn.github.io/viptool/y.js').then(m=>m.o())
+javascript:import('https://ltaenn.github.io/viptool/z.js').then(m=>m.o())
 ```
 
 Mã bookmarklet dài **73 ký tự**. Mã giao diện và bộ điều khiển được nạp từ GitHub Pages bằng ES module. Mở lại bookmarklet sẽ mở bảng đang có; đóng rồi mở lại vẫn hoạt động dù module đã được trình duyệt cache.
@@ -51,13 +51,13 @@ Nếu website tự gửi đăng ký sau khi bạn giải, tool đợi kết qu�
 
 ## Nhận diện ba ô đăng ký otpokvip
 
-Bản 1.7 nhận trực tiếp ba input trong cùng một nhóm đăng ký đang hiển thị:
+Bản 1.8 nhận trực tiếp ba input trong cùng một nhóm đăng ký đang hiển thị:
 
 - input[data-input-name="account"]
 - input[data-input-name="userpass"]
 - input[data-input-name="realName"]
 
-Các section.ui-input, section.ui-input__input-wrap, section.ui-input__input-container và biểu tượng SVG là thẻ bao ngoài, không phải đích nhập. Việc điền ba ô này không phụ thuộc selector Username/Mật khẩu/Họ tên cũ đã lưu. Tool tự chọn otpokvip khi có đủ bộ ba này trên trang lúc mở. Có thể chọn lại site bằng danh sách hồ sơ.
+Cấu hình cũ của nút đăng ký trỏ .ui-button__content được chuyển sang #insideRegisterSubmitClick. Các section.ui-input, section.ui-input__input-wrap, section.ui-input__input-container và biểu tượng SVG là thẻ bao ngoài, không phải đích nhập. Việc điền ba ô này không phụ thuộc selector Username/Mật khẩu/Họ tên cũ đã lưu. Tool tự chọn otpokvip khi có đủ bộ ba này trên trang lúc mở. Có thể chọn lại site bằng danh sách hồ sơ.
 
 Tool phân biệt form đăng ký với form đăng nhập đang hiển thị bằng việc tìm bộ ba trong cùng nhóm, bỏ bản sao ẩn qua hidden/aria-hidden/opacity, tìm lại input sau mỗi ký tự để hỗ trợ website dựng lại ô. Nếu thực sự có hai form đăng ký hiện cùng lúc, tool dừng thay vì nhập tùy ý. Cấu hình → Kiểm tra trang cho biết đã tìm đủ ba ô hay chưa; thông tin kiểm tra không chứa giá trị tài khoản/mật khẩu.
 
@@ -72,10 +72,10 @@ Tác vụ Đăng ký + thêm bank chạy 20 bước:
 1. Điền tài khoản: input[data-input-name="account"].
 2. Điền mật khẩu: input[data-input-name="userpass"].
 3. Điền họ tên: input[data-input-name="realName"].
-4. Bấm ĐĂNG KÝ.
+4. Bấm chính button#insideRegisterSubmitClick (nút ĐĂNG KÝ); chờ website bật nút nếu nút đang disabled.
 5. Bấm Tài Khoản.
 6. Bấm Rút Tiền.
-7. Bấm ô PIN đầu tiên (.ui-password-input__item).
+7. Bấm thẻ li.ui-password-input__item đầu tiên trong nhóm PIN đang hiển thị, chờ bàn phím số mở rồi mới nhập. Không phụ thuộc :first-child vì nhóm có thể có nhãn ở trước thẻ li. Bỏ bản sao ẩn; nếu có hai nhóm PIN cùng hiển thị tool dừng để tránh bấm nhầm.
 8. Nhập PIN bằng bàn phím số .ui-number-keyboard-key.
 9. Nhập lại cùng PIN bằng bàn phím số.
 10. Bấm Thêm Tài Khoản.
@@ -194,6 +194,8 @@ Khi chạy thật và bật Khôi phục sau tải trang, tiến trình cùng da
 
 ## Kiểm tra và giới hạn
 
+Bản 1.8 kiểm tra nút button#insideRegisterSubmitClick theo HTML cung cấp, chuyển cấu hình nút cũ, chờ disabled, ô PIN li đầu tiên sau nhãn, bỏ nhóm PIN ẩn và dừng khi có nhiều nhóm cùng hiện. Đã chạy lại luồng đầy đủ otpokvip, điền form, bàn phím ba lượt PIN, tạm dừng/dừng và khôi phục tiến trình.
+
 Có trang mẫu `sandbox.html` để kiểm tra luồng gõ, bấm và xác nhận bằng các phản hồi giả lập ngay trong trình duyệt. Trang này không tạo tài khoản hoặc liên kết ngân hàng thật.
 
 Bản 1.6 kiểm tra thêm otpokvip theo thứ tự 20 bước, 16 bước ngân hàng, 3 bước điền đăng ký; ba lượt bàn phím web có số 0, bank MB/VCB/TCB/CTG, dừng/tạm dừng trong lúc bấm phím, chặn gõ trùng PIN đang nhập và khôi phục sau bước 18. Kiểm tra 1.5 gồm hai ô withdraw/withdrawT, ký tự gõ, PIN tự sinh, chặn xác nhận khi thiếu ô hoặc hai giá trị khác nhau; đã kiểm tra bằng Chromium cục bộ: bảy hồ sơ site; QQ88 với MB/VCB/AGRI/TCB; PIN trong form QQ88; CAPTCHA trước và sau bấm đăng ký, chờ hơn hai phút, chỉ thử lại sau khi người dùng hoàn tất khi có phản hồi từ chối CAPTCHA; dừng trong lúc chờ CAPTCHA. Đã chạy lại kiểm tra hồi quy luồng cũ: cả ba chế độ; luồng thật trên DOM mẫu đủ 10 bước; xác nhận ba phản hồi; gõ từng ký tự; giữ số 0 đầu; giữ PIN đã có; tạm dừng/tiếp tục; hủy khi dừng; dừng khi API trả lỗi nghiệp vụ; bookmarklet module mở lại; khung rộng 320, 360, 390, 430 px. Chưa kiểm thử tài khoản thật trên website hoặc trên từng thiết bị điện thoại thực tế.
@@ -204,7 +206,8 @@ CAPTCHA được chờ theo mô tả ở trên và cần người dùng tự gi�
 
 ## Các file
 
-- `y.js`: ES module 1.7 cho bookmarklet ngắn; URL mới để tránh cache bản cũ.
+- `z.js`: ES module 1.8 cho bookmarklet ngắn; URL mới để tránh cache bản cũ.
+- `y.js`: tên module 1.7, được giữ tương thích.
 - `x.js`: tên module 1.6, được giữ tương thích.
 - `w.js`: tên module 1.5, được giữ tương thích.
 - `u.js`: tên module 1.4, được giữ tương thích.
@@ -221,4 +224,4 @@ CAPTCHA được chờ theo mô tả ở trên và cần người dùng tự gi�
 - `bookmarklet-offline.txt`: bản chứa toàn bộ mã.
 - `bank-list.json`: danh sách ngân hàng.
 
-Để đổi nơi lưu mã, đưa các file lên hosting HTTPS, rồi tạo bookmarklet theo URL mới của `y.js`. Trang cài đặt tự lấy URL module theo địa chỉ HTTPS hiện tại. Hosting cần trả JavaScript với MIME phù hợp và cho phép CORS để module được nạp từ website khác. GitHub Pages đã được chọn cho bản này.
+Để đổi nơi lưu mã, đưa các file lên hosting HTTPS, rồi tạo bookmarklet theo URL mới của `z.js`. Trang cài đặt tự lấy URL module theo địa chỉ HTTPS hiện tại. Hosting cần trả JavaScript với MIME phù hợp và cho phép CORS để module được nạp từ website khác. GitHub Pages đã được chọn cho bản này.
