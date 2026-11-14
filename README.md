@@ -1,11 +1,11 @@
-# viptool 1.8
+# viptool 1.9
 
 Bookmarklet cho trình duyệt điện thoại và máy tính. Hồ sơ có sẵn: **HI88, NEW88, F8BET, Shbet, MB66, 789BET, QQ88, otpokvip**. Sáu hồ sơ đầu dùng luồng cũ; QQ88 và otpokvip dùng luồng riêng. Cấu hình của các site được lưu độc lập. Tool thao tác trên trang đang mở; tên miền của website không bị gắn cứng trong mã.
 
 **Trang cài đặt:** https://ltaenn.github.io/viptool/
 
 ```javascript
-javascript:import('https://ltaenn.github.io/viptool/z.js').then(m=>m.o())
+javascript:import('https://ltaenn.github.io/viptool/a.js').then(m=>m.o())
 ```
 
 Mã bookmarklet dài **73 ký tự**. Mã giao diện và bộ điều khiển được nạp từ GitHub Pages bằng ES module. Mở lại bookmarklet sẽ mở bảng đang có; đóng rồi mở lại vẫn hoạt động dù module đã được trình duyệt cache.
@@ -57,7 +57,7 @@ Bản 1.8 nhận trực tiếp ba input trong cùng một nhóm đăng ký đang
 - input[data-input-name="userpass"]
 - input[data-input-name="realName"]
 
-Cấu hình cũ của nút đăng ký trỏ .ui-button__content được chuyển sang #insideRegisterSubmitClick. Các section.ui-input, section.ui-input__input-wrap, section.ui-input__input-container và biểu tượng SVG là thẻ bao ngoài, không phải đích nhập. Việc điền ba ô này không phụ thuộc selector Username/Mật khẩu/Họ tên cũ đã lưu. Tool tự chọn otpokvip khi có đủ bộ ba này trên trang lúc mở. Có thể chọn lại site bằng danh sách hồ sơ.
+Nút đăng ký được tìm theo button#insideRegisterSubmitClick trong đúng nhóm account/userpass/realName vừa điền, mở rộng tới form chứa nhóm khi nút nằm ở footer bên cạnh. Cấu hình nút cũ tìm toàn trang không được dùng cho thao tác đăng ký otpokvip. Tool loại nút opacity 0, aria-hidden, inert hoặc nằm ở nhóm khác; nếu có hai nút cùng hiện thì chỉ chọn khi xác định được duy nhất một nút được bật. Hai nút cùng bật trong cùng form vẫn được báo rõ để tránh bấm nhầm. Các section.ui-input, section.ui-input__input-wrap, section.ui-input__input-container và biểu tượng SVG là thẻ bao ngoài, không phải đích nhập. Việc điền ba ô này không phụ thuộc selector Username/Mật khẩu/Họ tên cũ đã lưu. Tool tự chọn otpokvip khi có đủ bộ ba này trên trang lúc mở. Có thể chọn lại site bằng danh sách hồ sơ.
 
 Tool phân biệt form đăng ký với form đăng nhập đang hiển thị bằng việc tìm bộ ba trong cùng nhóm, bỏ bản sao ẩn qua hidden/aria-hidden/opacity, tìm lại input sau mỗi ký tự để hỗ trợ website dựng lại ô. Nếu thực sự có hai form đăng ký hiện cùng lúc, tool dừng thay vì nhập tùy ý. Cấu hình → Kiểm tra trang cho biết đã tìm đủ ba ô hay chưa; thông tin kiểm tra không chứa giá trị tài khoản/mật khẩu.
 
@@ -194,6 +194,8 @@ Khi chạy thật và bật Khôi phục sau tải trang, tiến trình cùng da
 
 ## Kiểm tra và giới hạn
 
+Bản 1.9 tái hiện lỗi Có nhiều phần tử cho Nút đăng ký của bản 1.8 trên trang mẫu rồi xác nhận đã sửa: nút trùng ID ngoài form, bản sao ẩn trong form, selector lưu cũ quá rộng, nút ở footer cùng form và nút trùng bị disabled. Hai nút thực sự cùng bật trong cùng form vẫn bị chặn; đã chạy đủ luồng otpokvip sau các trường hợp chọn nút hợp lệ.
+
 Bản 1.8 kiểm tra nút button#insideRegisterSubmitClick theo HTML cung cấp, chuyển cấu hình nút cũ, chờ disabled, ô PIN li đầu tiên sau nhãn, bỏ nhóm PIN ẩn và dừng khi có nhiều nhóm cùng hiện. Đã chạy lại luồng đầy đủ otpokvip, điền form, bàn phím ba lượt PIN, tạm dừng/dừng và khôi phục tiến trình.
 
 Có trang mẫu `sandbox.html` để kiểm tra luồng gõ, bấm và xác nhận bằng các phản hồi giả lập ngay trong trình duyệt. Trang này không tạo tài khoản hoặc liên kết ngân hàng thật.
@@ -206,7 +208,8 @@ CAPTCHA được chờ theo mô tả ở trên và cần người dùng tự gi�
 
 ## Các file
 
-- `z.js`: ES module 1.8 cho bookmarklet ngắn; URL mới để tránh cache bản cũ.
+- `a.js`: ES module 1.9 cho bookmarklet ngắn; URL mới để tránh cache bản cũ.
+- `z.js`: tên module 1.8, được giữ tương thích.
 - `y.js`: tên module 1.7, được giữ tương thích.
 - `x.js`: tên module 1.6, được giữ tương thích.
 - `w.js`: tên module 1.5, được giữ tương thích.
@@ -224,4 +227,4 @@ CAPTCHA được chờ theo mô tả ở trên và cần người dùng tự gi�
 - `bookmarklet-offline.txt`: bản chứa toàn bộ mã.
 - `bank-list.json`: danh sách ngân hàng.
 
-Để đổi nơi lưu mã, đưa các file lên hosting HTTPS, rồi tạo bookmarklet theo URL mới của `z.js`. Trang cài đặt tự lấy URL module theo địa chỉ HTTPS hiện tại. Hosting cần trả JavaScript với MIME phù hợp và cho phép CORS để module được nạp từ website khác. GitHub Pages đã được chọn cho bản này.
+Để đổi nơi lưu mã, đưa các file lên hosting HTTPS, rồi tạo bookmarklet theo URL mới của `a.js`. Trang cài đặt tự lấy URL module theo địa chỉ HTTPS hiện tại. Hosting cần trả JavaScript với MIME phù hợp và cho phép CORS để module được nạp từ website khác. GitHub Pages đã được chọn cho bản này.
