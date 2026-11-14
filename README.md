@@ -1,11 +1,11 @@
-# viptool 1.5
+# viptool 1.6
 
-Bookmarklet cho trình duyệt điện thoại và máy tính. Hồ sơ có sẵn: **HI88, NEW88, F8BET, Shbet, MB66, 789BET, QQ88**. Sáu hồ sơ đầu dùng luồng cũ; QQ88 dùng luồng thêm ngân hàng riêng. Cấu hình của các site được lưu độc lập. Tool thao tác trên trang đang mở; tên miền của website không bị gắn cứng trong mã.
+Bookmarklet cho trình duyệt điện thoại và máy tính. Hồ sơ có sẵn: **HI88, NEW88, F8BET, Shbet, MB66, 789BET, QQ88, otpokvip**. Sáu hồ sơ đầu dùng luồng cũ; QQ88 và otpokvip dùng luồng riêng. Cấu hình của các site được lưu độc lập. Tool thao tác trên trang đang mở; tên miền của website không bị gắn cứng trong mã.
 
 **Trang cài đặt:** https://ltaenn.github.io/viptool/
 
 ```javascript
-javascript:import('https://ltaenn.github.io/viptool/w.js').then(m=>m.o())
+javascript:import('https://ltaenn.github.io/viptool/x.js').then(m=>m.o())
 ```
 
 Mã bookmarklet dài **73 ký tự**. Mã giao diện và bộ điều khiển được nạp từ GitHub Pages bằng ES module. Mở lại bookmarklet sẽ mở bảng đang có; đóng rồi mở lại vẫn hoạt động dù module đã được trình duyệt cache.
@@ -48,6 +48,41 @@ Trong bước đăng ký, tool nhận diện một số khung CAPTCHA thông d�
 Khi có CAPTCHA, bảng tool thu nhỏ, hiển thị trạng thái Chờ CAPTCHA và không tính thời gian người dùng giải vào giới hạn chờ thao tác. Bạn tự giải trên website; tool tiếp tục khi thấy khung biến mất hoặc token hoàn tất. Nếu thư viện vẫn giữ khung sau khi giải, bấm **Tôi đã giải xong** trên thông báo của tool để tiếp tục kiểm tra. Có thể bấm Dừng ngay khi đang chờ.
 
 Nếu website tự gửi đăng ký sau khi bạn giải, tool đợi kết quả; không gửi lại khi đã nhận thành công. Nếu website từ chối rõ vì CAPTCHA sai và chưa gửi lại, tool chỉ thử lại sau khi người dùng hoàn tất CAPTCHA. CAPTCHA có cấu trúc riêng chưa nhận diện được có thể cần bổ sung mẫu. Không thử giải CAPTCHA tự động.
+
+## Luồng otpokvip theo thứ tự file
+
+Có hồ sơ **otpokvip** riêng, dùng nguyên định dạng data và mã bank cũ. City không được dùng vì file đầu vào không có ô city cho site này. Số điện thoại được dùng ở cuối luồng trong Bảo mật. PIN cần đúng **6 chữ số**, hoặc được tự sinh 6 chữ số nếu để trống và bật tự sinh.
+
+Tác vụ Đăng ký + thêm bank chạy 20 bước:
+
+1. Điền tài khoản: input[data-input-name="account"].
+2. Điền mật khẩu: input[data-input-name="userpass"].
+3. Điền họ tên: input[data-input-name="realName"].
+4. Bấm ĐĂNG KÝ.
+5. Bấm Tài Khoản.
+6. Bấm Rút Tiền.
+7. Bấm ô PIN đầu tiên (.ui-password-input__item).
+8. Nhập PIN bằng bàn phím số .ui-number-keyboard-key.
+9. Nhập lại cùng PIN bằng bàn phím số.
+10. Bấm Thêm Tài Khoản.
+11. Bấm Thêm Vào (#addAccountClick).
+12. Nhập cùng PIN lần nữa qua bàn phím web để mở form ngân hàng.
+13. Điền số tài khoản, gõ từng ký tự và giữ số 0 đầu.
+14. Bấm Chọn ngân hàng phát hành.
+15. Chọn mục .ui-options__option theo mã bank trong data.
+16. Bấm Xác Nhận (#bindWithdrawAccountNextClick).
+17. Bấm thoát / quay lại.
+18. Bấm Bảo Mật.
+19. Bấm Số Điện Thoại.
+20. Điền input[data-input-name="phone"].
+
+Các lượt PIN bấm từng chữ số, bao gồm 0; tool kiểm tra chấm PIN đã nhận sau từng phím và chờ chuyển sang bước tiếp theo. Nếu khung PIN đang có ký tự, tool dừng để tránh nhập lặp. Nếu website đã mở Thêm Tài Khoản, ba bước cài PIN ban đầu được bỏ qua; bước nhập PIN để thêm ngân hàng vẫn chạy. Bàn phím/độ dài khác mẫu cần kiểm tra và bổ sung theo HTML thực tế.
+
+Chế độ Điền đăng ký chỉ chạy ba ô tài khoản, mật khẩu, họ tên; không yêu cầu số điện thoại ở chế độ này và không bấm Đăng ký. Chế độ Thêm ngân hàng chạy 16 bước, bắt đầu từ Tài Khoản và kết thúc điền SĐT. Mỗi bước vẫn nghỉ **2 giây**. Có thể khôi phục tiến trình dài qua tải lại trong cùng tab/origin như các site khác.
+
+Tên bank từ HTML cung cấp đã được nối vào mã cũ: MB → MB BANK; VCB → Vietcom Bank; CTG → Vietin Bank(VTB); TCB → TECHCOMBANK(TCB); ACB → ACB; LPB → LIENVIETPOSTBANK(LPB), v.v. Không chọn thay ngân hàng khi không tìm thấy mục trùng.
+
+File không có API/phản hồi của otpokvip. Tool dùng trạng thái giao diện để chờ sau đăng ký/PIN, và chỉ báo đã bấm Xác Nhận ngân hàng. File kết thúc ở nhập SĐT nên tool không bấm gửi OTP, không nhập OTP và không xác nhận liên kết số điện thoại. Kiểm tra kết quả ngân hàng trên website. Nếu chưa tìm được nút do lớp CSS khác, có thể gán lại riêng từng phần tử trong Cấu hình.
 
 ## Luồng QQ88
 
@@ -147,7 +182,7 @@ Khi chạy thật và bật Khôi phục sau tải trang, tiến trình cùng da
 
 Có trang mẫu `sandbox.html` để kiểm tra luồng gõ, bấm và xác nhận bằng các phản hồi giả lập ngay trong trình duyệt. Trang này không tạo tài khoản hoặc liên kết ngân hàng thật.
 
-Bản 1.5 kiểm tra thêm hai ô withdraw/withdrawT, ký tự gõ, PIN tự sinh, chặn xác nhận khi thiếu ô hoặc hai giá trị khác nhau; đã kiểm tra bằng Chromium cục bộ: bảy hồ sơ site; QQ88 với MB/VCB/AGRI/TCB; PIN trong form QQ88; CAPTCHA trước và sau bấm đăng ký, chờ hơn hai phút, chỉ thử lại sau khi người dùng hoàn tất khi có phản hồi từ chối CAPTCHA; dừng trong lúc chờ CAPTCHA. Đã chạy lại kiểm tra hồi quy luồng cũ: cả ba chế độ; luồng thật trên DOM mẫu đủ 10 bước; xác nhận ba phản hồi; gõ từng ký tự; giữ số 0 đầu; giữ PIN đã có; tạm dừng/tiếp tục; hủy khi dừng; dừng khi API trả lỗi nghiệp vụ; bookmarklet module mở lại; khung rộng 320, 360, 390, 430 px. Chưa kiểm thử tài khoản thật trên website hoặc trên từng thiết bị điện thoại thực tế.
+Bản 1.6 kiểm tra thêm otpokvip theo thứ tự 20 bước, 16 bước ngân hàng, 3 bước điền đăng ký; ba lượt bàn phím web có số 0, bank MB/VCB/TCB/CTG, dừng/tạm dừng trong lúc bấm phím, chặn gõ trùng PIN đang nhập và khôi phục sau bước 18. Kiểm tra 1.5 gồm hai ô withdraw/withdrawT, ký tự gõ, PIN tự sinh, chặn xác nhận khi thiếu ô hoặc hai giá trị khác nhau; đã kiểm tra bằng Chromium cục bộ: bảy hồ sơ site; QQ88 với MB/VCB/AGRI/TCB; PIN trong form QQ88; CAPTCHA trước và sau bấm đăng ký, chờ hơn hai phút, chỉ thử lại sau khi người dùng hoàn tất khi có phản hồi từ chối CAPTCHA; dừng trong lúc chờ CAPTCHA. Đã chạy lại kiểm tra hồi quy luồng cũ: cả ba chế độ; luồng thật trên DOM mẫu đủ 10 bước; xác nhận ba phản hồi; gõ từng ký tự; giữ số 0 đầu; giữ PIN đã có; tạm dừng/tiếp tục; hủy khi dừng; dừng khi API trả lỗi nghiệp vụ; bookmarklet module mở lại; khung rộng 320, 360, 390, 430 px. Chưa kiểm thử tài khoản thật trên website hoặc trên từng thiết bị điện thoại thực tế.
 
 Bookmarklet cần trình duyệt hỗ trợ JavaScript URL và ES module. CSP của website có thể chặn việc nạp mã. Tool không chạy trong giao diện native của app hoặc iframe khác origin. Các sự kiện từ bookmarklet là sự kiện JavaScript, không phải sự kiện bàn phím được trình duyệt đánh dấu `isTrusted`.
 
@@ -155,7 +190,8 @@ CAPTCHA được chờ theo mô tả ở trên và cần người dùng tự gi�
 
 ## Các file
 
-- `w.js`: ES module 1.5 cho bookmarklet ngắn; URL mới để tránh cache bản cũ.
+- `x.js`: ES module 1.6 cho bookmarklet ngắn; URL mới để tránh cache bản cũ.
+- `w.js`: tên module 1.5, được giữ tương thích.
 - `u.js`: tên module 1.4, được giữ tương thích.
 - `t.js`: tên module 1.3, được giữ tương thích.
 - `s.js`: tên module 1.2, được giữ tương thích.
@@ -165,8 +201,9 @@ CAPTCHA được chờ theo mô tả ở trên và cần người dùng tự gi�
 - `index.html`: trang cài đặt.
 - `sandbox.html`: trang kiểm tra luồng cũ.
 - `sandbox-qq88.html`: trang kiểm tra luồng QQ88 và CAPTCHA giả lập.
+- `sandbox-otpokvip.html`: trang mẫu với ba lượt bàn phím PIN, lựa chọn bank và nhập SĐT.
 - `bookmarklet.txt`: bookmarklet ngắn.
 - `bookmarklet-offline.txt`: bản chứa toàn bộ mã.
 - `bank-list.json`: danh sách ngân hàng.
 
-Để đổi nơi lưu mã, đưa các file lên hosting HTTPS, rồi tạo bookmarklet theo URL mới của `w.js`. Trang cài đặt tự lấy URL module theo địa chỉ HTTPS hiện tại. Hosting cần trả JavaScript với MIME phù hợp và cho phép CORS để module được nạp từ website khác. GitHub Pages đã được chọn cho bản này.
+Để đổi nơi lưu mã, đưa các file lên hosting HTTPS, rồi tạo bookmarklet theo URL mới của `x.js`. Trang cài đặt tự lấy URL module theo địa chỉ HTTPS hiện tại. Hosting cần trả JavaScript với MIME phù hợp và cho phép CORS để module được nạp từ website khác. GitHub Pages đã được chọn cho bản này.
