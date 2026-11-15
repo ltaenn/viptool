@@ -51,5 +51,7 @@
     "setupPin": "",
     "submitPin": ""
   },
-  "saveBank": true
+  "saveBank": true,
+  "finishPhone": false,
+  "stepByStep": false
 }

@@ -1,11 +1,11 @@
-# viptool 2.3
+# viptool 2.4
 
 Bookmarklet cho trình duyệt điện thoại và máy tính. Hồ sơ có sẵn: **HI88, NEW88, F8BET, Shbet, MB66, 789BET, QQ88, otpokvip**. Sáu hồ sơ đầu dùng luồng cũ; QQ88 và otpokvip dùng luồng riêng. Cấu hình của các site được lưu độc lập. Tool thao tác trên trang đang mở; tên miền của website không bị gắn cứng trong mã.
 
 **Trang cài đặt:** https://ltaenn.github.io/viptool/
 
 ```javascript
-javascript:import('https://ltaenn.github.io/viptool/e.js').then(m=>m.o())
+javascript:import('https://ltaenn.github.io/viptool/f.js').then(m=>m.o())
 ```
 
 Mã bookmarklet dài **73 ký tự**. Mã giao diện và bộ điều khiển được nạp từ GitHub Pages bằng ES module. Mở lại bookmarklet sẽ mở bảng đang có; đóng rồi mở lại vẫn hoạt động dù module đã được trình duyệt cache.
@@ -48,6 +48,16 @@ Trong bước đăng ký, tool nhận diện một số khung CAPTCHA thông d�
 Khi có CAPTCHA, bảng tool thu nhỏ, hiển thị trạng thái Chờ CAPTCHA và không tính thời gian người dùng giải vào giới hạn chờ thao tác. Bạn tự giải trên website; tool tiếp tục khi thấy khung biến mất hoặc token hoàn tất. Nếu thư viện vẫn giữ khung sau khi giải, bấm **Tôi đã giải xong** trên thông báo của tool để tiếp tục kiểm tra. Có thể bấm Dừng ngay khi đang chờ.
 
 Nếu website tự gửi đăng ký sau khi bạn giải, tool đợi kết quả; không gửi lại khi đã nhận thành công. Nếu website từ chối rõ vì CAPTCHA sai và chưa gửi lại, tool chỉ thử lại sau khi người dùng hoàn tất CAPTCHA. CAPTCHA có cấu trúc riêng chưa nhận diện được có thể cần bổ sung mẫu. Không thử giải CAPTCHA tự động.
+
+## Luồng cuối theo yêu cầu — bản 2.4
+
+Theo yêu cầu cuối của người dùng, tác vụ kết thúc sau **bấm Xác Nhận lưu ngân hàng → mở Bảo Mật → Số Điện Thoại → điền SĐT**. Mặc định không gửi SMS, không nhập OTP và không đợi liên kết SĐT. Có 22 bước cho tác vụ đầy đủ, 18 bước cho Thêm ngân hàng, 3 bước cho Điền đăng ký; mỗi bước nghỉ 2 giây. Nếu người dùng tự bật Chờ xác nhận liên kết SĐT thì có thêm một bước chờ, nhưng tùy chọn này mặc định tắt.
+
+Nút Xác Nhận lưu ngân hàng không bị bỏ qua. Tool kiểm tra data, bấm #bindWithdrawAccountNextClick rồi chờ phản hồi thành công hoặc bằng chứng UI tương ứng khi transport trả text mã hóa; sau đó mới rời màn hình bank. Không coi chỉ HTTP 200 là đã lưu, và không coi điền SĐT là đã liên kết số điện thoại.
+
+Đã kiểm tra trực tiếp trên LDPlayer/Chrome Inspect: điền đủ ba ô đăng ký; quan sát hai hàng PIN và nút lưu riêng; mở đúng Thêm Vào ngân hàng giữa mục ngân hàng/tiền điện tử trùng ID; nhập số tài khoản và chạm chọn MB BANK; sau người dùng tự xác nhận lưu, UI hiển thị MB BANK và tài khoản che đúng đuôi đã cung cấp; dùng tool quay lại, mở Bảo Mật, Số Điện Thoại và điền đúng số được chỉ định. Chưa nhập OTP hay xác nhận liên kết SĐT, đúng phạm vi cuối người dùng yêu cầu.
+
+Đã chạy kiểm thử trang mẫu theo chính hợp đồng sự kiện đọc từ mã frontend: mousedown/touchstart để gửi đăng ký, touchstart ở wrapper phím PIN, touchstart/touchend cho mục bank, đóng bàn phím cũ khi focus hàng mới, nút Xác Nhận lưu PIN và Tiếp Theo riêng, duplicate tab inactive, mã code:1 và phản hồi text mã hóa. Bản code không chứa dữ liệu tài khoản thật của phiên kiểm tra.
 
 ## Chrome Inspect trên LDPlayer — bản 2.3
 
@@ -135,7 +145,7 @@ Tool phân biệt form đăng ký với form đăng nhập đang hiển thị b�
 
 Có hồ sơ **otpokvip** riêng, dùng nguyên định dạng data và mã bank cũ. City không được dùng vì file đầu vào không có ô city cho site này. Số điện thoại được dùng ở cuối luồng trong Bảo mật. PIN cần đúng **6 chữ số**, hoặc được tự sinh 6 chữ số nếu để trống và bật tự sinh.
 
-Tác vụ Đăng ký + thêm bank chạy 23 bước:
+Tác vụ Đăng ký + thêm bank mặc định chạy 22 bước:
 
 1. Điền tài khoản: input[data-input-name="account"].
 2. Điền mật khẩu: input[data-input-name="userpass"].
@@ -159,11 +169,12 @@ Tác vụ Đăng ký + thêm bank chạy 23 bước:
 20. Bấm Bảo Mật.
 21. Bấm Số Điện Thoại.
 22. Điền SĐT từ data.
-23. Chờ người dùng xác nhận/OTP và bằng chứng liên kết SĐT thành công.
+
+Tùy chọn tắt mặc định: chờ người dùng xác nhận/OTP và bằng chứng liên kết SĐT thành công, chỉ chạy nếu bạn tự bật Chờ xác nhận liên kết SĐT.
 
 Các lượt PIN bấm từng chữ số, bao gồm 0; tool kiểm tra chấm PIN đã nhận sau từng phím và chờ chuyển sang bước tiếp theo. Nếu khung PIN đang có ký tự, tool dừng để tránh nhập lặp. Nếu website đã mở Thêm Tài Khoản, ba bước cài PIN ban đầu được bỏ qua; bước nhập PIN để thêm ngân hàng vẫn chạy. Bàn phím/độ dài khác mẫu cần kiểm tra và bổ sung theo HTML thực tế.
 
-Chế độ Điền đăng ký chỉ chạy ba ô tài khoản, mật khẩu, họ tên; không yêu cầu số điện thoại ở chế độ này và không bấm Đăng ký. Chế độ Thêm ngân hàng chạy 19 bước, bắt đầu từ Tài Khoản và kết thúc điền SĐT. Mỗi bước vẫn nghỉ **2 giây**. Có thể khôi phục tiến trình dài qua tải lại trong cùng tab/origin như các site khác.
+Chế độ Điền đăng ký chỉ chạy ba ô tài khoản, mật khẩu, họ tên; không yêu cầu số điện thoại ở chế độ này và không bấm Đăng ký. Chế độ Thêm ngân hàng mặc định chạy 18 bước, bắt đầu từ Tài Khoản và kết thúc điền SĐT. Mỗi bước vẫn nghỉ **2 giây**. Có thể khôi phục tiến trình dài qua tải lại trong cùng tab/origin như các site khác.
 
 Tên bank từ HTML cung cấp đã được nối vào mã cũ: MB → MB BANK; VCB → Vietcom Bank; CTG → Vietin Bank(VTB); TCB → TECHCOMBANK(TCB); ACB → ACB; LPB → LIENVIETPOSTBANK(LPB), v.v. Không chọn thay ngân hàng khi không tìm thấy mục trùng.
 
@@ -285,7 +296,8 @@ CAPTCHA được chờ theo mô tả ở trên và cần người dùng tự gi�
 
 ## Các file
 
-- `e.js`: ES module 2.3 cho bookmarklet ngắn; URL mới để tránh cache bản cũ.
+- `f.js`: ES module 2.4 cho bookmarklet ngắn; URL mới để tránh cache bản cũ.
+- `e.js`: tên module 2.3, được giữ tương thích.
 - `d.js`: tên module 2.2, được giữ tương thích.
 - `c.js`: tên module 2.1, được giữ tương thích.
 - `b.js`: tên module 2.0, được giữ tương thích.
@@ -309,4 +321,4 @@ CAPTCHA được chờ theo mô tả ở trên và cần người dùng tự gi�
 - `bank-list.json`: danh sách ngân hàng.
 - `otpokvip-keypad-config.json`: cấu hình đã thêm khung bàn phím, các phím số và kiểu chạm/click.
 
-Để đổi nơi lưu mã, đưa các file lên hosting HTTPS, rồi tạo bookmarklet theo URL mới của `e.js`. Trang cài đặt tự lấy URL module theo địa chỉ HTTPS hiện tại. Hosting cần trả JavaScript với MIME phù hợp và cho phép CORS để module được nạp từ website khác. GitHub Pages đã được chọn cho bản này.
+Để đổi nơi lưu mã, đưa các file lên hosting HTTPS, rồi tạo bookmarklet theo URL mới của `f.js`. Trang cài đặt tự lấy URL module theo địa chỉ HTTPS hiện tại. Hosting cần trả JavaScript với MIME phù hợp và cho phép CORS để module được nạp từ website khác. GitHub Pages đã được chọn cho bản này.
