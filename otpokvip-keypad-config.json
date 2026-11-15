@@ -11,9 +11,9 @@
     "pin": true
   },
   "routes": [
-    null,
-    null,
-    null
+    "/hall/api/member/register",
+    "/hall/api/member/user/security/modifyWithdrawPass",
+    "/hall/api/finance/certify/bindWithdrawAccount"
   ],
   "mapping": {
     "username": "input[data-input-name=\"account\"]",

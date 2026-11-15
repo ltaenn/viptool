@@ -1,11 +1,11 @@
-# viptool 2.2
+# viptool 2.3
 
 Bookmarklet cho trình duyệt điện thoại và máy tính. Hồ sơ có sẵn: **HI88, NEW88, F8BET, Shbet, MB66, 789BET, QQ88, otpokvip**. Sáu hồ sơ đầu dùng luồng cũ; QQ88 và otpokvip dùng luồng riêng. Cấu hình của các site được lưu độc lập. Tool thao tác trên trang đang mở; tên miền của website không bị gắn cứng trong mã.
 
 **Trang cài đặt:** https://ltaenn.github.io/viptool/
 
 ```javascript
-javascript:import('https://ltaenn.github.io/viptool/d.js').then(m=>m.o())
+javascript:import('https://ltaenn.github.io/viptool/e.js').then(m=>m.o())
 ```
 
 Mã bookmarklet dài **73 ký tự**. Mã giao diện và bộ điều khiển được nạp từ GitHub Pages bằng ES module. Mở lại bookmarklet sẽ mở bảng đang có; đóng rồi mở lại vẫn hoạt động dù module đã được trình duyệt cache.
@@ -48,6 +48,43 @@ Trong bước đăng ký, tool nhận diện một số khung CAPTCHA thông d�
 Khi có CAPTCHA, bảng tool thu nhỏ, hiển thị trạng thái Chờ CAPTCHA và không tính thời gian người dùng giải vào giới hạn chờ thao tác. Bạn tự giải trên website; tool tiếp tục khi thấy khung biến mất hoặc token hoàn tất. Nếu thư viện vẫn giữ khung sau khi giải, bấm **Tôi đã giải xong** trên thông báo của tool để tiếp tục kiểm tra. Có thể bấm Dừng ngay khi đang chờ.
 
 Nếu website tự gửi đăng ký sau khi bạn giải, tool đợi kết quả; không gửi lại khi đã nhận thành công. Nếu website từ chối rõ vì CAPTCHA sai và chưa gửi lại, tool chỉ thử lại sau khi người dùng hoàn tất CAPTCHA. CAPTCHA có cấu trúc riêng chưa nhận diện được có thể cần bổ sung mẫu. Không thử giải CAPTCHA tự động.
+
+## Chrome Inspect trên LDPlayer — bản 2.3
+
+Đã kết nối đúng target Chrome của LDPlayer, đọc DOM thực tế ở trang đăng ký và 63 file JavaScript đang tải hoặc được frontend tham chiếu. Trong các file này có 493 đường dẫn API khai báo; danh sách đó khác với API thực sự đã gọi và không chứng minh đã biết mọi endpoint phía máy chủ. Báo cáo chi tiết được cung cấp riêng trong thư mục outputs của phiên làm việc.
+
+Đã xác minh trên LDPlayer thật: chế độ Điền đăng ký điền đủ account, userpass và realName, chưa gửi tạo tài khoản. Sau đó người dùng tự hoàn tất đăng ký và bước PIN; đã đọc màn hình thật sau đăng nhập, hai hàng PIN và hộp PIN xác minh. Đã nạp module 2.3 trong trang thật và dùng chính hàm tool điền số tài khoản, chọn MB thành công, dừng trước xác nhận lưu. Chưa tuyên bố hoàn tất gắn ngân hàng/SĐT khi chưa có xác nhận trên trang thật.
+
+Các phát hiện từ code thật:
+
+- Trang giữ bản sao nút Đăng ký trong .ui-tab__panel-wrapper--inactive. Phần tử ngoài màn hình vẫn có display/visibility bình thường nên lọc :visible không đủ. Bản 2.3 loại mọi ô/nút PIN trong panel inactive.
+- Ba ô đăng ký nằm trong form, nút Đăng ký là anh em của form ở phần extra. Bộ chọn tiếp tục tìm trong nhóm đăng ký đang hoạt động.
+- Component nút phát tap từ mousedown/touchstart và cha gửi đăng ký qua onTap; click đơn thuần không gửi. Bản 2.3 gửi đúng một mousedown/mouseup, không bấm hai lần và không gỡ disabled/loading.
+- Phím số nhận press trên touchstart ở .ui-number-keyboard-key__wrapper; touchend ngăn hành vi mặc định. Sự kiện chạm ở phần tử con lan tới wrapper. Trước khi chuyển hàng PIN, tool phát touchstart vào ô mới để làm mất focus bàn phím cũ, rồi click mở đúng hàng.
+- ID addAccountClick bị dùng chung cho Tài khoản ngân hàng và Tiền điện tử; tool lọc đúng nhãn ngân hàng trước khi bấm. Sau hai hàng PIN có nút Xác Nhận lưu PIN riêng; sau nhập PIN để thêm bank có nút Tiếp Theo riêng. Hai bước này đã được thêm vào luồng.
+- Mục bank .ui-options__option chỉ nhận touchstart/touchend, không có listener click. Tool dùng chạm để chọn; MB đã được chọn thành công trên trang thật.
+- API transport có thể trả text mã hóa. Phản hồi không đọc được JSON được giữ là chưa xác minh; tool chỉ tiếp tục khi UI tương ứng cũng cho thấy đã thành công (chuyển đúng trang, form đóng kèm thông báo thành công, hoặc trạng thái đã liên kết SĐT). Không dùng HTTP 200 làm bằng chứng duy nhất.
+- API client báo thành công bằng code: 1. Tool nhận code viết thường theo site otpokvip và không áp quy tắc đó cho site khác.
+
+Các route xác nhận dùng cho otpokvip:
+
+| Thao tác | Route transport |
+|---|---|
+| Đăng ký | /hall/api/member/register |
+| Đặt PIN rút | /hall/api/member/user/security/modifyWithdrawPass |
+| Gắn ngân hàng | /hall/api/finance/certify/bindWithdrawAccount |
+| Gửi SMS | /hall/api/member/user/security/createSms |
+| Kiểm tra OTP | /hall/api/member/user/security/verifyPhoneCode |
+| Liên kết/đổi SĐT | /hall/api/member/user/security/modifyPhone |
+| Cập nhật SĐT trên profile | /hall/api/member/v2/user/update |
+
+Tool quan sát request do trang tạo từ thao tác giao diện; không tự gọi API tài khoản. Thông tin nguồn đã đọc dùng để chọn endpoint và hợp đồng sự kiện, chưa thay thế kiểm tra kết quả server trên tài khoản thật.
+
+**Kiểm tra từng bước:** bật trong Cấu hình để tool dừng trước từng hành động. Nhấn Tiếp tục để tool thực hiện; hoặc bạn tự làm trên trang rồi nhấn Đã làm thủ công bước này. Bước làm thủ công được ghi rõ trong kết quả, không bị báo như thao tác tool tự xác minh. Dừng sẽ hủy điểm chờ. Có thể mở module mới ngay trong trang; data, chế độ và checkpoint đang lưu được giữ khi cập nhật từ phiên bản cũ.
+
+**Liên kết SĐT:** sau khi điền số, tool chờ bạn xác nhận trên website và nhập OTP nếu trang yêu cầu. Chỉ báo liên kết khi nhận phản hồi thành công của route liên kết. createSms/verifyPhoneCode đơn thuần không tính là đã liên kết. Phản hồi profile update chung cần thêm UI số điện thoại đã liên kết. Tắt Chờ xác nhận liên kết SĐT trong Cấu hình nếu chỉ muốn dừng ở điền số.
+
+Đã kiểm thử bằng trang mẫu mô phỏng đúng hợp đồng mousedown/touchstart, tab inactive, bàn phím teleported nhiều hàng, hai ID Thêm Vào ngân hàng/crypto, nút xác nhận PIN và Tiếp Theo riêng, API code:1 và text mã hóa, xác nhận ngân hàng/SĐT, không coi gửi SMS là liên kết, kiểm tra từng bước và cập nhật module giữ data. Chưa xác minh đầy đủ tạo tài khoản → PIN → ngân hàng → OTP trên tài khoản thật; cần người dùng hoàn tất các bước xác nhận để kiểm tra tiếp.
 
 ## Cấu hình otpokvip dùng chung và lượt xác nhận PIN — bản 2.2
 
@@ -98,36 +135,39 @@ Tool phân biệt form đăng ký với form đăng nhập đang hiển thị b�
 
 Có hồ sơ **otpokvip** riêng, dùng nguyên định dạng data và mã bank cũ. City không được dùng vì file đầu vào không có ô city cho site này. Số điện thoại được dùng ở cuối luồng trong Bảo mật. PIN cần đúng **6 chữ số**, hoặc được tự sinh 6 chữ số nếu để trống và bật tự sinh.
 
-Tác vụ Đăng ký + thêm bank chạy 20 bước:
+Tác vụ Đăng ký + thêm bank chạy 23 bước:
 
 1. Điền tài khoản: input[data-input-name="account"].
 2. Điền mật khẩu: input[data-input-name="userpass"].
 3. Điền họ tên: input[data-input-name="realName"].
-4. Bấm chính button#insideRegisterSubmitClick (nút ĐĂNG KÝ); chờ website bật nút nếu nút đang disabled.
+4. Bấm ĐĂNG KÝ bằng mousedown/touchstart của button#insideRegisterSubmitClick trên panel đang hoạt động.
 5. Bấm Tài Khoản.
 6. Bấm Rút Tiền.
-7. Bấm thẻ li.ui-password-input__item đầu tiên trong nhóm PIN đang hiển thị, chờ bàn phím số mở rồi mới nhập. Không phụ thuộc :first-child vì nhóm có thể có nhãn ở trước thẻ li. Bỏ bản sao ẩn; các li có thể nằm trong lớp bọc riêng nhưng vẫn được gộp theo khối ui-password-input/ul. Nếu có hai hàng mới/xác nhận cùng hiển thị, chọn theo nhãn và bước đang chạy, ưu tiên hàng đang trong màn hình/ở phía trước. Nếu chưa phân biệt được, tool báo rõ thay vì gộp tất cả li thành một PIN.
-8. Nhập PIN bằng bàn phím số .ui-number-keyboard-key.
-9. Nhập lại cùng PIN bằng bàn phím số.
-10. Bấm Thêm Tài Khoản.
-11. Bấm Thêm Vào (#addAccountClick).
-12. Nhập cùng PIN lần nữa qua bàn phím web để mở form ngân hàng.
-13. Điền số tài khoản, gõ từng ký tự và giữ số 0 đầu.
-14. Bấm Chọn ngân hàng phát hành.
-15. Chọn mục .ui-options__option theo mã bank trong data.
-16. Bấm Xác Nhận (#bindWithdrawAccountNextClick).
-17. Bấm thoát / quay lại.
-18. Bấm Bảo Mật.
-19. Bấm Số Điện Thoại.
-20. Điền input[data-input-name="phone"].
+7. Bấm ô PIN đầu tiên.
+8. Nhập PIN qua bàn phím web.
+9. Nhập lại cùng PIN qua bàn phím web.
+10. Bấm Xác Nhận để lưu PIN, chờ API/UI xác nhận.
+11. Bấm Thêm Tài Khoản (nếu màn hình chọn loại tài khoản đã mở thì bỏ qua).
+12. Bấm Thêm Vào đúng mục Tài khoản ngân hàng, không phải Tiền điện tử.
+13. Nhập PIN để thêm ngân hàng.
+14. Bấm Tiếp Theo ở hộp PIN để mở form.
+15. Điền số tài khoản.
+16. Mở chọn ngân hàng phát hành.
+17. Chạm chọn tên ngân hàng theo mã bank.
+18. Bấm Xác Nhận lưu ngân hàng; chờ API/UI thành công.
+19. Bấm thoát / quay lại.
+20. Bấm Bảo Mật.
+21. Bấm Số Điện Thoại.
+22. Điền SĐT từ data.
+23. Chờ người dùng xác nhận/OTP và bằng chứng liên kết SĐT thành công.
 
 Các lượt PIN bấm từng chữ số, bao gồm 0; tool kiểm tra chấm PIN đã nhận sau từng phím và chờ chuyển sang bước tiếp theo. Nếu khung PIN đang có ký tự, tool dừng để tránh nhập lặp. Nếu website đã mở Thêm Tài Khoản, ba bước cài PIN ban đầu được bỏ qua; bước nhập PIN để thêm ngân hàng vẫn chạy. Bàn phím/độ dài khác mẫu cần kiểm tra và bổ sung theo HTML thực tế.
 
-Chế độ Điền đăng ký chỉ chạy ba ô tài khoản, mật khẩu, họ tên; không yêu cầu số điện thoại ở chế độ này và không bấm Đăng ký. Chế độ Thêm ngân hàng chạy 16 bước, bắt đầu từ Tài Khoản và kết thúc điền SĐT. Mỗi bước vẫn nghỉ **2 giây**. Có thể khôi phục tiến trình dài qua tải lại trong cùng tab/origin như các site khác.
+Chế độ Điền đăng ký chỉ chạy ba ô tài khoản, mật khẩu, họ tên; không yêu cầu số điện thoại ở chế độ này và không bấm Đăng ký. Chế độ Thêm ngân hàng chạy 19 bước, bắt đầu từ Tài Khoản và kết thúc điền SĐT. Mỗi bước vẫn nghỉ **2 giây**. Có thể khôi phục tiến trình dài qua tải lại trong cùng tab/origin như các site khác.
 
 Tên bank từ HTML cung cấp đã được nối vào mã cũ: MB → MB BANK; VCB → Vietcom Bank; CTG → Vietin Bank(VTB); TCB → TECHCOMBANK(TCB); ACB → ACB; LPB → LIENVIETPOSTBANK(LPB), v.v. Không chọn thay ngân hàng khi không tìm thấy mục trùng.
 
-File không có API/phản hồi của otpokvip. Tool dùng trạng thái giao diện để chờ sau đăng ký/PIN, và chỉ báo đã bấm Xác Nhận ngân hàng. File kết thúc ở nhập SĐT nên tool không bấm gửi OTP, không nhập OTP và không xác nhận liên kết số điện thoại. Kiểm tra kết quả ngân hàng trên website. Nếu chưa tìm được nút do lớp CSS khác, có thể gán lại riêng từng phần tử trong Cấu hình.
+Bản 2.3 đã bổ sung route xác nhận từ Chrome Inspect như phần đầu tài liệu. Tool vẫn thao tác qua giao diện và chờ request của trang. Phần nhập OTP hoặc xác nhận tài khoản/SĐT cần người dùng thực hiện khi được yêu cầu; tool quan sát kết quả. Nếu chưa tìm được nút do lớp CSS khác, có thể gán lại riêng từng phần tử trong Cấu hình.
 
 ## Luồng QQ88
 
@@ -245,7 +285,8 @@ CAPTCHA được chờ theo mô tả ở trên và cần người dùng tự gi�
 
 ## Các file
 
-- `d.js`: ES module 2.2 cho bookmarklet ngắn; URL mới để tránh cache bản cũ.
+- `e.js`: ES module 2.3 cho bookmarklet ngắn; URL mới để tránh cache bản cũ.
+- `d.js`: tên module 2.2, được giữ tương thích.
 - `c.js`: tên module 2.1, được giữ tương thích.
 - `b.js`: tên module 2.0, được giữ tương thích.
 - `a.js`: tên module 1.9, được giữ tương thích.
@@ -268,4 +309,4 @@ CAPTCHA được chờ theo mô tả ở trên và cần người dùng tự gi�
 - `bank-list.json`: danh sách ngân hàng.
 - `otpokvip-keypad-config.json`: cấu hình đã thêm khung bàn phím, các phím số và kiểu chạm/click.
 
-Để đổi nơi lưu mã, đưa các file lên hosting HTTPS, rồi tạo bookmarklet theo URL mới của `d.js`. Trang cài đặt tự lấy URL module theo địa chỉ HTTPS hiện tại. Hosting cần trả JavaScript với MIME phù hợp và cho phép CORS để module được nạp từ website khác. GitHub Pages đã được chọn cho bản này.
+Để đổi nơi lưu mã, đưa các file lên hosting HTTPS, rồi tạo bookmarklet theo URL mới của `e.js`. Trang cài đặt tự lấy URL module theo địa chỉ HTTPS hiện tại. Hosting cần trả JavaScript với MIME phù hợp và cho phép CORS để module được nạp từ website khác. GitHub Pages đã được chọn cho bản này.
