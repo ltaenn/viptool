@@ -1,11 +1,11 @@
-# viptool 2.5
+# viptool 2.6
 
 Bookmarklet cho trình duyệt điện thoại và máy tính. Hồ sơ có sẵn: **HI88, NEW88, F8BET, Shbet, MB66, 789BET, QQ88, otpokvip**. Sáu hồ sơ đầu dùng luồng cũ; QQ88 và otpokvip dùng luồng riêng. Cấu hình của các site được lưu độc lập. Tool thao tác trên trang đang mở; tên miền của website không bị gắn cứng trong mã.
 
 **Trang cài đặt:** https://ltaenn.github.io/viptool/
 
 ```javascript
-javascript:import('https://ltaenn.github.io/viptool/g.js').then(m=>m.o())
+javascript:import('https://ltaenn.github.io/viptool/h.js').then(m=>m.o())
 ```
 
 Mã bookmarklet dài **73 ký tự**. Mã giao diện và bộ điều khiển được nạp từ GitHub Pages bằng ES module. Mở lại bookmarklet sẽ mở bảng đang có; đóng rồi mở lại vẫn hoạt động dù module đã được trình duyệt cache.
@@ -48,6 +48,21 @@ Trong bước đăng ký, tool nhận diện một số khung CAPTCHA thông d�
 Khi có CAPTCHA, bảng tool thu nhỏ, hiển thị trạng thái Chờ CAPTCHA và không tính thời gian người dùng giải vào giới hạn chờ thao tác. Bạn tự giải trên website; tool tiếp tục khi thấy khung biến mất hoặc token hoàn tất. Nếu thư viện vẫn giữ khung sau khi giải, bấm **Tôi đã giải xong** trên thông báo của tool để tiếp tục kiểm tra. Có thể bấm Dừng ngay khi đang chờ.
 
 Nếu website tự gửi đăng ký sau khi bạn giải, tool đợi kết quả; không gửi lại khi đã nhận thành công. Nếu website từ chối rõ vì CAPTCHA sai và chưa gửi lại, tool chỉ thử lại sau khi người dùng hoàn tất CAPTCHA. CAPTCHA có cấu trúc riêng chưa nhận diện được có thể cần bổ sung mẫu. Không thử giải CAPTCHA tự động.
+
+## Giao diện mượt và icon di chuyển — bản 2.6
+
+Giao diện cập nhật khoảng cách, chữ, độ tương phản, nút và các thẻ dữ liệu; có hiệu ứng mở/thu nhỏ, chuyển tab và thanh chỉ báo tab. Các tác vụ đăng ký, PIN, bank, SĐT và khoảng nghỉ 2 giây giữ nguyên.
+
+- Nhấn dấu − để thu nhỏ bảng. Chạm icon V để mở lại.
+- Kéo icon bằng chuột hoặc ngón tay. Chỉ chuyển thành kéo khi đi quá 6 px, nên chạm nhẹ vẫn mở bảng.
+- Khi thả, icon tự bám cạnh trái/phải gần nhất, lưu cạnh và tỷ lệ chiều cao trong localStorage với key viptool.ui.position.v1. Không lưu data tài khoản vào mục vị trí này.
+- Kéo không bị hiểu thành bấm mở tool. Hủy thao tác kéo sẽ trả về vị trí đã lưu. Đổi kích thước màn hình/xoay máy sẽ giữ icon trong vùng nhìn thấy.
+- Có thể dùng phím mũi tên khi icon đang được focus để đổi vị trí. Cấu hình → Đặt lại vị trí icon nổi để đưa về mặc định.
+- Vị trí chỉ lưu trên trình duyệt và tên miền hiện tại; không tự đồng bộ vị trí giữa các máy. Nếu trình duyệt chặn lưu trữ, kéo vẫn hoạt động trong phiên hiện tại.
+- Kéo/mở/thu nhỏ không tạo lần chạy mới và không xóa data hay thay đổi tiến trình đang chạy. Đóng tool sẽ gỡ listener kéo/resize để không giữ thao tác trên trang.
+- Tôn trọng prefers-reduced-motion: giảm/tắt chuyển động khi hệ điều hành yêu cầu. Tab hỗ trợ phím trái/phải, Home và End.
+
+Đã kiểm tra Chromium với chuột và cảm ứng: kéo, bám cạnh, chạm mở, không mở nhầm khi kéo, hủy cử chỉ, lưu và khôi phục vị trí, reset, xoay/đổi viewport, kích thước 320/360/390/430 px, giữ data/tiến trình mô phỏng, chế độ giảm chuyển động và trường hợp lưu trữ vị trí bị chặn. Chưa kiểm tra bằng tay trên mọi thiết bị thực tế.
 
 ## Trạng thái đã bấm và kết quả website — bản 2.5
 
@@ -308,7 +323,8 @@ CAPTCHA được chờ theo mô tả ở trên và cần người dùng tự gi�
 
 ## Các file
 
-- `g.js`: ES module 2.5 cho bookmarklet ngắn; URL mới để tránh cache bản cũ.
+- `h.js`: ES module 2.6 cho bookmarklet ngắn; URL mới để tránh cache bản cũ.
+- `g.js`: tên module 2.5, được giữ tương thích.
 - `f.js`: tên module 2.4, được giữ tương thích.
 - `e.js`: tên module 2.3, được giữ tương thích.
 - `d.js`: tên module 2.2, được giữ tương thích.
@@ -334,4 +350,4 @@ CAPTCHA được chờ theo mô tả ở trên và cần người dùng tự gi�
 - `bank-list.json`: danh sách ngân hàng.
 - `otpokvip-keypad-config.json`: cấu hình đã thêm khung bàn phím, các phím số và kiểu chạm/click.
 
-Để đổi nơi lưu mã, đưa các file lên hosting HTTPS, rồi tạo bookmarklet theo URL mới của `g.js`. Trang cài đặt tự lấy URL module theo địa chỉ HTTPS hiện tại. Hosting cần trả JavaScript với MIME phù hợp và cho phép CORS để module được nạp từ website khác. GitHub Pages đã được chọn cho bản này.
+Để đổi nơi lưu mã, đưa các file lên hosting HTTPS, rồi tạo bookmarklet theo URL mới của `h.js`. Trang cài đặt tự lấy URL module theo địa chỉ HTTPS hiện tại. Hosting cần trả JavaScript với MIME phù hợp và cho phép CORS để module được nạp từ website khác. GitHub Pages đã được chọn cho bản này.
