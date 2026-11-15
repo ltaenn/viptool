@@ -18,5 +18,5 @@ $('mat-select').onclick=()=>{$('#bank-options').hidden=false;$('mat-select').set
 document.querySelectorAll('mat-option').forEach(el=>el.onclick=()=>{selected=Number(el.dataset.id);$('#selected-bank').textContent=el.textContent.trim();$('#bank-options').hidden=true;$('mat-select').setAttribute('aria-expanded','false');});
 $('#bank-form').onsubmit=async e=>{e.preventDefault();await post('/api/1.0/bank/add',{account:read('#bank-form','account'),city:read('#bank-form','city'),province:null,groupBankId:selected});$('#bank-form').hidden=true;$('#saved').hidden=false;};
 if(new URL(location.href).searchParams.has('registered')){$('#register-area').hidden=true;$('#member-area').hidden=false;}
-$('#reset-test').onclick=()=>location.href='sandbox.html';$('#open-tool').onclick=()=>import('./f.js').then(m=>m.o());
+$('#reset-test').onclick=()=>location.href='sandbox.html';$('#open-tool').onclick=()=>import('./g.js').then(m=>m.o());
 </script></body></html>

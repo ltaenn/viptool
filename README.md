@@ -1,11 +1,11 @@
-# viptool 2.4
+# viptool 2.5
 
 Bookmarklet cho trình duyệt điện thoại và máy tính. Hồ sơ có sẵn: **HI88, NEW88, F8BET, Shbet, MB66, 789BET, QQ88, otpokvip**. Sáu hồ sơ đầu dùng luồng cũ; QQ88 và otpokvip dùng luồng riêng. Cấu hình của các site được lưu độc lập. Tool thao tác trên trang đang mở; tên miền của website không bị gắn cứng trong mã.
 
 **Trang cài đặt:** https://ltaenn.github.io/viptool/
 
 ```javascript
-javascript:import('https://ltaenn.github.io/viptool/f.js').then(m=>m.o())
+javascript:import('https://ltaenn.github.io/viptool/g.js').then(m=>m.o())
 ```
 
 Mã bookmarklet dài **73 ký tự**. Mã giao diện và bộ điều khiển được nạp từ GitHub Pages bằng ES module. Mở lại bookmarklet sẽ mở bảng đang có; đóng rồi mở lại vẫn hoạt động dù module đã được trình duyệt cache.
@@ -48,6 +48,18 @@ Trong bước đăng ký, tool nhận diện một số khung CAPTCHA thông d�
 Khi có CAPTCHA, bảng tool thu nhỏ, hiển thị trạng thái Chờ CAPTCHA và không tính thời gian người dùng giải vào giới hạn chờ thao tác. Bạn tự giải trên website; tool tiếp tục khi thấy khung biến mất hoặc token hoàn tất. Nếu thư viện vẫn giữ khung sau khi giải, bấm **Tôi đã giải xong** trên thông báo của tool để tiếp tục kiểm tra. Có thể bấm Dừng ngay khi đang chờ.
 
 Nếu website tự gửi đăng ký sau khi bạn giải, tool đợi kết quả; không gửi lại khi đã nhận thành công. Nếu website từ chối rõ vì CAPTCHA sai và chưa gửi lại, tool chỉ thử lại sau khi người dùng hoàn tất CAPTCHA. CAPTCHA có cấu trúc riêng chưa nhận diện được có thể cần bổ sung mẫu. Không thử giải CAPTCHA tự động.
+
+## Trạng thái đã bấm và kết quả website — bản 2.5
+
+Sau khi phát sự kiện Đăng ký, tool ghi nhật ký Đã bấm Đăng ký và đánh dấu xong hành động bấm trong timeline. Nếu CAPTCHA/Botion hiện, trạng thái là Đã bấm Đăng ký · chờ bạn giải CAPTCHA; việc chờ không giới hạn thời gian giải và không bấm lại đăng ký. Chỉ đi tiếp tới tài khoản sau kết quả đăng ký. Nếu CAPTCHA có trước lúc bấm thì tool không ghi nhầm đã bấm nút.
+
+Sau khi bấm Xác Nhận lưu bank, otpBankClicked được ghi ngay và lưu vào checkpoint trước khi chờ phản hồi. Nhật ký/bước hiển thị Đã bấm Xác Nhận ngân hàng; không còn ghi chưa bấm chỉ vì phản hồi server chưa đọc được.
+
+Khi API trả text mã hóa hoặc thông báo tạm đã biến mất, tool nhận bằng chứng lưu bank nếu form số tài khoản đã đóng và thấy thẻ lưu có đúng tên bank, cùng số tài khoản hoặc ít nhất ba số cuối của tài khoản sau dấu che số. Không dùng tên ngân hàng đơn lẻ, không dùng chỉ form đóng, không dùng một thẻ bank khác đuôi để xác nhận. JSON báo lỗi rõ từ server vẫn dừng quy trình. Nếu hết thời gian xác minh, thông báo vẫn ghi rõ đã bấm nút nhưng chưa đọc được kết quả lưu, không tự gửi lại ngân hàng.
+
+Trạng thái hoàn tất mặc định là Website đã xác nhận lưu ngân hàng. Đã điền SĐT; hoàn tất quy trình. SĐT không được nói là đã liên kết khi chưa xác nhận/OTP; bước đó nằm ngoài phạm vi mặc định.
+
+Đã kiểm tra trang mẫu: CAPTCHA hiện sau một lần bấm và chờ hơn hai phút; không đăng ký lại; phản hồi bank mã hóa/chậm, không còn toast nhưng có thẻ bank che đúng số; thẻ sai đuôi bị từ chối; lỗi nghiệp vụ server vẫn được giữ; nút bank chỉ gửi một lần. Chưa kiểm thử thay đổi này bằng cách tạo tài khoản hoặc gắn bank mới trên tài khoản thật.
 
 ## Luồng cuối theo yêu cầu — bản 2.4
 
@@ -296,7 +308,8 @@ CAPTCHA được chờ theo mô tả ở trên và cần người dùng tự gi�
 
 ## Các file
 
-- `f.js`: ES module 2.4 cho bookmarklet ngắn; URL mới để tránh cache bản cũ.
+- `g.js`: ES module 2.5 cho bookmarklet ngắn; URL mới để tránh cache bản cũ.
+- `f.js`: tên module 2.4, được giữ tương thích.
 - `e.js`: tên module 2.3, được giữ tương thích.
 - `d.js`: tên module 2.2, được giữ tương thích.
 - `c.js`: tên module 2.1, được giữ tương thích.
@@ -321,4 +334,4 @@ CAPTCHA được chờ theo mô tả ở trên và cần người dùng tự gi�
 - `bank-list.json`: danh sách ngân hàng.
 - `otpokvip-keypad-config.json`: cấu hình đã thêm khung bàn phím, các phím số và kiểu chạm/click.
 
-Để đổi nơi lưu mã, đưa các file lên hosting HTTPS, rồi tạo bookmarklet theo URL mới của `f.js`. Trang cài đặt tự lấy URL module theo địa chỉ HTTPS hiện tại. Hosting cần trả JavaScript với MIME phù hợp và cho phép CORS để module được nạp từ website khác. GitHub Pages đã được chọn cho bản này.
+Để đổi nơi lưu mã, đưa các file lên hosting HTTPS, rồi tạo bookmarklet theo URL mới của `g.js`. Trang cài đặt tự lấy URL module theo địa chỉ HTTPS hiện tại. Hosting cần trả JavaScript với MIME phù hợp và cho phép CORS để module được nạp từ website khác. GitHub Pages đã được chọn cho bản này.
